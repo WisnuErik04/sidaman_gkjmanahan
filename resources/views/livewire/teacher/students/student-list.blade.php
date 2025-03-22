@@ -89,8 +89,8 @@
                                     </td>
                                     <td class="h-px w-auto whitespace-nowrap">
                                         <div class="px-6 py-2">
-                                            <span class="text-sm text-gray-800 dark:text-neutral-200">{{$student->age}}</span>
-                                            <span class="text-xs text-gray-500 dark:text-neutral-500">(21.67%)</span>
+                                            <span class="text-sm text-gray-800 dark:text-neutral-200">{{$student->age}} years</span>
+                                            {{-- <span class="text-xs text-gray-500 dark:text-neutral-500">(21.67%)</span> --}}
                                         </div>
                                     </td>
                                     <td class="h-px w-auto whitespace-nowrap">
