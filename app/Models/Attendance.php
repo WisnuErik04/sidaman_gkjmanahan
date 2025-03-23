@@ -10,7 +10,7 @@ class Attendance extends Model
         'student_id',
         'grade_id',
         'date',
-        'reason',
+        'reason', //null
         'status',
     ];
 
