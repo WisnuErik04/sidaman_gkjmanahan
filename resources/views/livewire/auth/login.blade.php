@@ -9,7 +9,7 @@
         <flux:input
             wire:model="email"
             :label="__('Email address')"
-            type="email"
+            type="text"
             required
             autofocus
             autocomplete="email"

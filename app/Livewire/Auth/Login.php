@@ -15,7 +15,8 @@ use Livewire\Component;
 #[Layout('components.layouts.auth')]
 class Login extends Component
 {
-    #[Validate('required|string|email')]
+    // #[Validate('required|string|email')]
+    #[Validate('required|string')]
     public string $email = '';
 
     #[Validate('required|string')]
@@ -42,10 +43,13 @@ class Login extends Component
 
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
+        // dd(Auth::user(), Auth::user()->role);
         if(Auth::user()->role == 'admin'){
             $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: true);
-        }else{
-            $this->redirectIntended(default: route('teacher.dashboard', absolute: false), navigate: true);
+        } else if (Auth::user()->role == 'majelis') {
+            $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: true);
+        } else{
+            $this->redirectIntended(default: route('warga.dashboard', absolute: false), navigate: true);
         }
     }
 

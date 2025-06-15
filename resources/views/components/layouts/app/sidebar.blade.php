@@ -8,32 +8,120 @@
 <body class="min-h-screen bg-white dark:bg-zinc-800">
     <flux:sidebar sticky stashable class="border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
-
-        <a href="{{ route(auth()->user()->role == 'teacher' ? 'teacher.dashboard' : 'admin.dashboard') }}"
+        @php
+            if (auth()->user()->role == 'admin') {
+                $routeDashboard = 'admin.dashboard';
+            } elseif (auth()->user()->role == 'majelis') {
+                $routeDashboard = 'admin.dashboard';
+            } else {
+                $routeDashboard = 'warga.dashboard';
+            }
+        @endphp
+        <a href="{{ route($routeDashboard) }}"
             class="mr-5 flex items-center space-x-2" wire:navigate>
             <x-app-logo />
         </a>
 
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Platform')" class="grid">
-                <flux:navlist.item icon="home" :href="route(auth()->user()->role == 'teacher' ? 'teacher.dashboard' : 'admin.dashboard')" :current="request()->routeIs(auth()->user()->role == 'teacher' ? 'teacher.dashboard' : 'admin.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                <flux:navlist.item icon="home" :href="route($routeDashboard)" :current="request()->routeIs($routeDashboard)" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
             </flux:navlist.group>
-            @if (auth()->user()->role == 'admin')
-                <flux:navlist.item icon="academic-cap" :href="route('student.index')"
+            @if (auth()->user()->role == 'admin' || auth()->user()->role == 'majelis')
+                <flux:spacer />
+                {{-- <flux:navlist.item icon="academic-cap" :href="route('student.index')"
                     :current="request()->routeIs('student.index')" wire:navigate>{{ __('Student Management') }}
                 </flux:navlist.item>
                 <flux:navlist.item icon="bars-3-bottom-left" :href="route('grade.index')"
                     :current="request()->routeIs('grade.index')" wire:navigate>{{ __('Grade Management') }}
+                </flux:navlist.item> --}}
+
+                <flux:navlist.group expandable :heading="__('Warga')" class="grid">
+                    <flux:navlist.item :href="route('keluarga.index')"
+                        :current="request()->routeIs('keluarga.*')" wire:navigate>{{ __('Keluarga') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('anggota.index')"
+                        :current="request()->routeIs('anggota.*')" wire:navigate>{{ __('Anggota') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
+
+                <flux:navlist.group expandable :heading="__('Laporan')" class="grid">
+                    <flux:navlist.item :href="route('export_keluarga.index')"
+                        :current="request()->routeIs('export_keluarga.*')" wire:navigate>{{ __('Keluarga') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('export_anggota.index')"
+                        :current="request()->routeIs('export_anggota.*')" wire:navigate>{{ __('Anggota') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
+            @endif
+
+            @if (auth()->user()->role == 'admin')
+                <flux:spacer />
+                <flux:navlist.group expandable :heading="__('Master Data')" class="grid">
+                    <flux:navlist.item :href="route('blok.index')"
+                        :current="request()->routeIs('blok.*')" wire:navigate>{{ __('Blok') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('gol_darah.index')"
+                        :current="request()->routeIs('gol_darah.*')" wire:navigate>{{ __('Golongan Darah') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('hobi.index')"
+                        :current="request()->routeIs('hobi.*')" wire:navigate>{{ __('Hobi') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('hubungan_keluarga.index')"
+                        :current="request()->routeIs('hubungan_keluarga.*')" wire:navigate>{{ __('Hubungan Keluarga') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('ijazah.index')"
+                        :current="request()->routeIs('ijazah.*')" wire:navigate>{{ __('Ijazah') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('jarak_rumah.index')"
+                        :current="request()->routeIs('jarak_rumah.*')" wire:navigate>{{ __('Jarak Rumah') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('pekerjaan.index')"
+                        :current="request()->routeIs('pekerjaan.*')" wire:navigate>{{ __('Pekerjaan') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('pendapatan.index')"
+                        :current="request()->routeIs('pendapatan.*')" wire:navigate>{{ __('Pendapatan') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('penyakit.index')"
+                        :current="request()->routeIs('penyakit.*')" wire:navigate>{{ __('Penyakit') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('perkawinan.index')"
+                        :current="request()->routeIs('perkawinan.*')" wire:navigate>{{ __('Perkawinan') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('tempat_babtis.index')"
+                        :current="request()->routeIs('tempat_babtis.*')" wire:navigate>{{ __('Tempat babtis') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('tempat_sidi.index')"
+                        :current="request()->routeIs('tempat_sidi.*')" wire:navigate>{{ __('Tempat sidi') }}
+                    </flux:navlist.item>
+                    
+              
+                </flux:navlist.group>
+
+                <flux:navlist.item icon="shield-check" :href="route('user.index')"
+                    :current="request()->routeIs('user.*')" wire:navigate>{{ __('Akun Pengguna') }}
                 </flux:navlist.item>
             @endif
-            <flux:navlist.item icon="calendar-days" :href="route('attendance.page')"
+                
+            @if (auth()->user()->role == 'warga')
+                <flux:spacer />
+                <flux:navlist.group expandable :heading="__('Menu Utama')" class="grid">
+                    <flux:navlist.item :href="route('warga_keluarga.view')"
+                        :current="request()->routeIs('warga_keluarga.*')" wire:navigate>{{ __('Keluarga') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('warga_anggota.index')"
+                        :current="request()->routeIs('warga_anggota.*')" wire:navigate>{{ __('Data Pribadi') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
+            @endif
+
+            {{-- <flux:navlist.item icon="calendar-days" :href="route('attendance.page')"
                 :current="request()->routeIs('attendance.page')" wire:navigate>{{ __('Attendance Management') }}
-            </flux:navlist.item>
+            </flux:navlist.item> --}}
         </flux:navlist>
 
         <flux:spacer />
 
-        <flux:navlist variant="outline">
+        {{-- <flux:navlist variant="outline">
             <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit"
                 target="_blank">
                 {{ __('Repository') }}
@@ -42,7 +130,7 @@
             <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits" target="_blank">
                 {{ __('Documentation') }}
             </flux:navlist.item>
-        </flux:navlist>
+        </flux:navlist> --}}
 
         <!-- Desktop User Menu -->
         <flux:dropdown position="bottom" align="start">
@@ -138,6 +226,11 @@
 
     @fluxScripts
     <x-toaster-hub />
+    @livewireScripts
+    @stack('scripts')
+    @livewire('wire-elements-modal')
+    {{-- <script src="../../node_modules/lodash/lodash.min.js"></script>
+    <script src="../../node_modules/vanilla-calendar-pro/index.js"></script> --}}
 </body>
 
 </html>

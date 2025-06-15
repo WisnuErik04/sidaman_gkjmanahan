@@ -10,8 +10,12 @@
 /* Preline UI */
 @import "../../node_modules/preline/variants.css";
 @source "../../node_modules/preline/dist/*.js";
-
+@import "../../node_modules/preline/src/plugins/datepicker/styles.css";
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* @layer components {
+    @import "@tailwindcss/forms";
+} */
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -27,6 +31,12 @@
     --color-zinc-800: #262626;
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
+    
+    --color-red-50: #ffe2e2;
+    --color-red-100: #401717;
+
+    --color-yellow-400: #fdc700;
+    --color-yellow-500: oklch(79.5% 0.184 86.047);
 
     --color-accent: var(--color-neutral-800);
     --color-accent-content: var(--color-neutral-800);

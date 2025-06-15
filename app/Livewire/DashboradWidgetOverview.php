@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Student;
 use Livewire\Component;
 use App\Models\Attendance;
+use App\Models\Keluarga;
+use App\Models\KeluargaAnggota;
 
 class DashboradWidgetOverview extends Component
 {
@@ -19,32 +21,106 @@ class DashboradWidgetOverview extends Component
     public $monthlyTrends = [];
     public $attendanceToday;
 
-    public function mount(){
-        $today = Carbon::today();
-        $weekStart = Carbon::now()->startOfWeek();
-        $weekEnd = Carbon::now()->endOfWeek();
-        $monthStart = Carbon::now()->startOfMonth();
-        $monthEnd = Carbon::now()->endOfMonth();
+    public $totalKeluargas;
+    public $totalKeluargaAnggotas;
+    public $totalJnsKelamin;
+    public $generasiJemaat;
+
+
+    public function mount()
+    {
 
         // Fetch Data
-        $this->totalStudents = Student::count();
-        $this->totalUsers = User::count();
-        $this->totalTeachers = User::where('role', 'teacher')->count();
-        $this->attendanceToday = Attendance::whereDate('date', $today)->where('status', 'present')->count();
-        $this->presentToday = Attendance::whereDate('date', $today)->where('status', 'present')->count();
-        $this->absentToday = Attendance::whereDate('date', $today)->where('status', 'absent')->count();
-        // Weekly Attendance Rate
-        $totalClasses = Attendance::whereBetween('date', [$weekStart, $weekEnd])->count();
-        $presentCount = Attendance::whereBetween('date', [$weekStart, $weekEnd])->where('status', 'present')->count();
-        $this->weeklyAttendanceRate = $totalClasses > 0 ? round(($presentCount / $totalClasses) * 100, 2) : 0;
+        $this->totalKeluargas = Keluarga::whereNull('deleted_at')->count();
 
-        for ($i = 1; $i <= Carbon::now()->daysInMonth; $i++) {
-            $date = Carbon::createFromDate(Carbon::now()->year, Carbon::now()->month, $i);
-            $this->monthlyTrends[] = [
-                'day' => $i,
-                'count' => Attendance::whereDate('date', $date)->where('status', 'present')->count(),
-            ];
+        $this->totalKeluargaAnggotas = KeluargaAnggota::whereNull('deleted_at')
+            ->where('is_wafat', '0')
+            ->count();
+
+        // Total keluarga
+        $totalKeluargaQuery = Keluarga::whereNull('deleted_at');
+        if (auth()->user()->role === 'majelis') {
+            $totalKeluargaQuery->where('blok_id', auth()->user()->blok_id);
+        } elseif (auth()->user()->role === 'warga') {
+            $keluarga_id = KeluargaAnggota::where('user_id', auth()->user()->id)->pluck('keluarga_id');
+            $totalKeluargaQuery->where('id', $keluarga_id[0]);
         }
+        $this->totalKeluargas = $totalKeluargaQuery->count();
+
+
+        // Total anggota keluarga (yang belum wafat)
+        $totalAnggotaQuery = KeluargaAnggota::whereNull('deleted_at')
+            ->where('is_wafat', '0');
+        if (auth()->user()->role === 'majelis') {
+            $totalAnggotaQuery->whereHas('keluarga', function ($q) {
+                $q->where('blok_id', auth()->user()->blok_id);
+            });
+        } elseif (auth()->user()->role === 'warga') {
+            $keluarga_id = KeluargaAnggota::where('user_id', auth()->user()->id)->pluck('keluarga_id');
+            $totalAnggotaQuery->where('keluarga_id', $keluarga_id[0]);
+        }
+        $this->totalKeluargaAnggotas = $totalAnggotaQuery->count();
+
+        // $this->totalJnsKelamin = KeluargaAnggota::selectRaw('jns_kelamin, COUNT(*) as total')
+        //     ->whereNull('deleted_at')
+        //     ->where('is_wafat', '0')
+        //     ->groupBy('jns_kelamin')
+        //     ->pluck('total', 'jns_kelamin')
+        //     ->mapWithKeys(function ($val, $key) {
+        //         return [$key === 'L' ? 'Laki-laki' : 'Perempuan' => $val];
+        //     });
+
+        $query = KeluargaAnggota::selectRaw('jns_kelamin, COUNT(*) as total')
+            ->whereNull('deleted_at')
+            ->where('is_wafat', '0');
+        // Filter khusus jika user adalah majelis
+        if (auth()->user()->role === 'majelis') {
+            $query->whereHas('keluarga', function ($q) {
+                $q->where('blok_id', auth()->user()->blok_id);
+            });
+        }
+        $this->totalJnsKelamin = $query->groupBy('jns_kelamin')
+            ->pluck('total', 'jns_kelamin')
+            ->mapWithKeys(function ($val, $key) {
+                return [$key === 'L' ? 'Laki-laki' : 'Perempuan' => $val];
+            });
+
+        $ranges = [
+            '<1946' => 1945,
+            'Baby Boomers (1946 - 1964)' => 1964,
+            'Gen X (1965 - 1980)' => 1980,
+            'Gen Y (1981 - 1994)' => 1994,
+            'Gen Z (1995 - 2010)' => 2010,
+            'Gen Alpha (2011 - sekarang)' => 2050,
+        ];
+
+        $query = KeluargaAnggota::select("tgl_lahir")
+            ->whereNotNull("tgl_lahir")
+            ->whereNull('deleted_at')
+            ->where('is_wafat', '0');
+
+        // Filter jika user adalah majelis
+        if (auth()->user()->role === 'majelis') {
+            $query->whereHas('keluarga', function ($q) {
+                $q->where('blok_id', auth()->user()->blok_id);
+            });
+        }
+
+        $this->generasiJemaat = $query->get()
+            ->map(function ($anggota) use ($ranges) {
+                $year = Carbon::parse($anggota->tgl_lahir)->year;
+                foreach ($ranges as $key => $breakpoint) {
+                    if ($year <= $breakpoint) {
+                        $anggota->range = $key;
+                        break;
+                    }
+                }
+                return $anggota;
+            })
+            ->mapToGroups(function ($anggota) {
+                return [$anggota->range => $anggota];
+            })
+            ->map(fn($group) => count($group));
     }
     public function render()
     {
