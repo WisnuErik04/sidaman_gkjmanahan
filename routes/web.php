@@ -71,12 +71,12 @@ use App\Livewire\Warga\Anggotas\AnggotaView;
 use App\Livewire\Warga\Keluargas\Keluarga;
 use App\Livewire\Warga\Keluargas\KeluargaView;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// })->name('home');
 Route::get('/', function () {
     return redirect()->route('login');
 });
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 
 Route::get('/logout', Logout::class)->name('logout');
 Route::view('dashboard', 'dashboard')
