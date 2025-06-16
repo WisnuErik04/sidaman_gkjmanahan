@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\Auth\Login;
+use App\Livewire\Actions\Logout;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\Password;
 use Illuminate\Support\Facades\Auth;
@@ -15,18 +17,20 @@ use App\Livewire\Admin\Hobis\EditHobi;
 use App\Livewire\Admin\Hobis\ListHobi;
 use App\Livewire\Admin\Users\EditUser;
 use App\Livewire\Admin\Users\UserList;
+use App\Livewire\Warga\Anggotas\Anggota;
 use App\Livewire\Admin\Ijazahs\AddIjazah;
 use App\Livewire\Teacher\Grades\AddGrade;
 use App\Http\Controllers\ExportController;
-use App\Livewire\Actions\Logout;
 use App\Livewire\Admin\Ijazahs\EditIjazah;
 use App\Livewire\Admin\Ijazahs\ListIjazah;
 use App\Livewire\Teacher\Grades\EditGrade;
 use App\Livewire\Teacher\Grades\GradeList;
+use App\Livewire\Warga\Keluargas\Keluarga;
 use App\Livewire\Admin\Anggotas\AddAnggota;
 use App\Livewire\Admin\Anggotas\AnggotaList;
 use App\Livewire\Admin\Anggotas\EditAnggota;
 use App\Livewire\Admin\Anggotas\ViewAnggota;
+use App\Livewire\Warga\Anggotas\AnggotaView;
 use App\Livewire\Admin\GolDarahs\AddGolDarah;
 use App\Livewire\Admin\Keluargas\AddKeluarga;
 use App\Livewire\Admin\Penyakits\AddPenyakit;
@@ -41,6 +45,7 @@ use App\Livewire\Admin\Penyakits\EditPenyakit;
 use App\Livewire\Admin\Penyakits\ListPenyakit;
 use App\Livewire\Teacher\Students\EditStudent;
 use App\Livewire\Teacher\Students\StudentList;
+use App\Livewire\Warga\Keluargas\KeluargaView;
 use App\Livewire\Admin\Pekerjaans\AddPekerjaan;
 use App\Livewire\Admin\Keluargas\ImportKeluarga;
 use App\Livewire\Admin\Pekerjaans\EditPekerjaan;
@@ -66,17 +71,11 @@ use App\Livewire\Admin\TempatBabtises\ListTempatBabtis;
 use App\Livewire\Admin\HubunganKeluargas\AddHubunganKeluarga;
 use App\Livewire\Admin\HubunganKeluargas\EditHubunganKeluarga;
 use App\Livewire\Admin\HubunganKeluargas\ListHubunganKeluarga;
-use App\Livewire\Warga\Anggotas\Anggota;
-use App\Livewire\Warga\Anggotas\AnggotaView;
-use App\Livewire\Warga\Keluargas\Keluarga;
-use App\Livewire\Warga\Keluargas\KeluargaView;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', Login::class)->name('home');
+// Route::get('/', function () {
+//     return view('welcome');
+// })->name('home');
 
 Route::get('/logout', Logout::class)->name('logout');
 Route::view('dashboard', 'dashboard')
