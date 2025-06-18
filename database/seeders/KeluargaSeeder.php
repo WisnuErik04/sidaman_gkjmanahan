@@ -16,7 +16,7 @@ class KeluargaSeeder extends Seeder
     {
         // Keluarga::factory()->count(500)->create();
         Keluarga::factory()
-            ->count(500)
+            ->count(200)
             ->create()
             ->each(function ($keluarga) {
                 KeluargaAnggota::factory()->count(rand(3, 5))->create([
