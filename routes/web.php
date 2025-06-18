@@ -79,7 +79,7 @@ Route::get('/', Login::class)->name('home');
 
 Route::get('/logout', Logout::class)->name('logout');
 Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified', 'warga'])
+    ->middleware(['auth', 'verified', 'warga']) 
     ->name('warga.dashboard');
 // dd(Auth::user());
 
