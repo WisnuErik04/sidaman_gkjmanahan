@@ -485,8 +485,7 @@
 
                     <div class="">
                         <label for="hs-feedback-post-comment-name-1"
-                            class="block mb-2 text-sm font-medium dark:text-white">Generasi
-                            / Pepanthan</label>
+                            class="block mb-2 text-sm font-medium dark:text-white">Generasi</label>
                         <select multiple="" wire:model="searchGenerasi"
                             data-hs-select='{        
                                                         "hasSearch": true,
