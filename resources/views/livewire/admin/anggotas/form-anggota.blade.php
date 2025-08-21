@@ -14,13 +14,14 @@
         <div>
             <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Jenis
                 kelamin <span class="text-red-500">*</span></label>
-            <div class="grid  gap-2">
+            <div class="grid sm:grid-cols-2 gap-2">
                 <label for="hs-radio-L"
                     class="flex p-3 w-full bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
                     <input wire:model="jns_kelamin" type="radio" value="L"
                         class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 checked:border-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                         id="hs-radio-L">
-                    <span class="text-xs text-gray-500 ms-3 dark:text-neutral-400">Laki - laki</span>
+                    {{-- <span class="text-xs text-gray-500 ms-3 dark:text-neutral-400">Laki - laki</span> --}}
+                    <span class="text-xs text-gray-500 ms-3 dark:text-neutral-400">L</span>
                 </label>
 
                 <label for="hs-radio-P"
@@ -28,7 +29,8 @@
                     <input wire:model="jns_kelamin" type="radio" value="P"
                         class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 checked:border-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                         id="hs-radio-P">
-                    <span class="text-xs text-gray-500 ms-3 dark:text-neutral-400">Perempuan</span>
+                    {{-- <span class="text-xs text-gray-500 ms-3 dark:text-neutral-400">Perempuan</span> --}}
+                    <span class="text-xs text-gray-500 ms-3 dark:text-neutral-400">P</span>
                 </label>
             </div>
             {{-- <div>Value saat ini: {{ $jns_kelamin }}</div> --}}
@@ -39,7 +41,7 @@
 
         <div>
             <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Nomor
-                Induk Gereja <span class="text-red-500">*</span></label>
+                Induk Gereja</label>
             <input type="text"
                 class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
                 placeholder="Nomor Induk Gereja" wire:model="nomor_induk_gereja">
@@ -121,7 +123,7 @@
 
         <div>
             <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Golongan
-                darah <span class="text-red-500">*</span></label>
+                darah</label>
 
             <select wire:model="gol_darah_id"
                 data-hs-select='{        
@@ -212,8 +214,7 @@
 
         <div>
             <label for="hs-feedback-post-comment-name-1"
-                class="block mb-2 text-sm font-medium dark:text-white">Pendapatan per bulan
-                <span class="text-red-500">*</span></label>
+                class="block mb-2 text-sm font-medium dark:text-white">Pendapatan per bulan</label>
 
             <select wire:model="pendapatan_id"
                 data-hs-select='{        
@@ -243,8 +244,7 @@
 
         <div>
             <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Tempat
-                baptis anak
-                <span class="text-red-500">*</span></label>
+                baptis anak</label>
 
             <select wire:model="tempat_babtis_id"
                 data-hs-select='{        
@@ -275,7 +275,7 @@
         <div>
             <label for="hs-feedback-post-comment-name-1"
                 class="block mb-2 text-sm font-medium dark:text-white">Tanggal
-                baptis anak <span class="text-red-500">*</span></label>
+                baptis anak</label>
             <input type="date"
                 class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
                 placeholder="Tanggal baptis anak" wire:model="tgl_babtis">
@@ -287,7 +287,7 @@
         <div>
             <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Tempat
                 baptis dewasa/ Sidi
-                <span class="text-red-500">*</span></label>
+               </label>
 
             <select wire:model="tempat_sidi_id"
                 data-hs-select='{        
@@ -317,8 +317,8 @@
 
         <div>
             <label for="hs-feedback-post-comment-name-1"
-                class="block mb-2 text-sm font-medium dark:text-white">Tanggal baptis dewasa/ Sidi <span
-                    class="text-red-500">*</span></label>
+                class="block mb-2 text-sm font-medium dark:text-white">Tanggal baptis dewasa/ Sidi 
+            </label>
             <input type="date"
                 class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
                 placeholder="Tanggal baptis dewasa/ Sidi" wire:model="tgl_sidi">
@@ -330,7 +330,7 @@
         <div>
             <label for="hs-feedback-post-comment-name-1"
                 class="block mb-2 text-sm font-medium dark:text-white">Talenta/ Hobi
-                <span class="text-red-500">*</span></label>
+            </label>
 
             <select wire:model="hobi_id"
                 data-hs-select='{        
@@ -360,8 +360,8 @@
 
         <div>
             <label for="hs-feedback-post-comment-name-1"
-                class="block mb-2 text-sm font-medium dark:text-white">Aktivitas pelayanan yg aktif diikuti <span
-                    class="text-red-500">*</span></label>
+                class="block mb-2 text-sm font-medium dark:text-white">Aktivitas pelayanan yg aktif diikuti 
+            </label>
             <input type="text"
                 class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
                 placeholder="Aktivitas pelayanan yg aktif diikuti" wire:model="aktifitas_pelayanan">
@@ -372,8 +372,8 @@
 
         <div>
             <label for="hs-feedback-post-comment-name-1"
-                class="block mb-2 text-sm font-medium dark:text-white">Memiliki bpjs atau asuransi lainnya <span
-                    class="text-red-500">*</span></label>
+                class="block mb-2 text-sm font-medium dark:text-white">Memiliki bpjs atau asuransi lainnya 
+                <span class="text-red-500">*</span></label>
             <div class="grid sm:grid-cols-2 gap-2">
                 <label for="hs-radio-bpjs-y"
                     class="flex p-3 w-full bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
