@@ -41,6 +41,16 @@
     --color-accent: var(--color-neutral-800);
     --color-accent-content: var(--color-neutral-800);
     --color-accent-foreground: var(--color-white);
+/* 
+    --bg-gray-50: var(--color-zinc-50);
+    --bg-gray-100: var(--color-zinc-100);
+    --bg-gray-200: var(--color-zinc-200);
+    --bg-gray-300: var(--color-zinc-300);
+    --bg-gray-400: var(--color-zinc-400);
+    --bg-gray-500: var(--color-zinc-500);
+    --bg-gray-600: var(--color-zinc-600);
+    --bg-gray-700: var(--color-zinc-700);
+    --bg-gray-800: var(--color-zinc-800) */
 }
 
 @layer theme {

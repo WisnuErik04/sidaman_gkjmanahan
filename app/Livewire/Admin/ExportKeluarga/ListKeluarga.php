@@ -13,6 +13,7 @@ use App\Exports\JemaatExport;
 use Livewire\Attributes\Title;
 use App\Models\KeluargaAnggota;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\JemaatKepalaExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -141,7 +142,16 @@ class ListKeluarga extends Component
         // Flux::modal('filter')->close();
     }
 
-    public function export(): BinaryFileResponse
+    public function exportKepalaKeluarga(): BinaryFileResponse
+    {
+        return Excel::download(
+            new JemaatKepalaExport($this),
+            'data-kepala-keluarga.xlsx'
+        );
+    
+    }
+
+    public function exportKeluarga(): BinaryFileResponse
     {
         return Excel::download(
             new JemaatExport($this),

@@ -3,11 +3,12 @@
     <x-hs-preline />
 
     <!-- Table Section -->
-    <div class="max-w-[85rem] py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    {{-- <div class="max-w-[85rem] py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto"> --}}
+    <div class="max-w-[85rem] pb-10 sm:px-6 lg:pb-14 mx-auto">
         <!-- Card -->
         <div>
             <!-- Header -->
-            <div class="py-4 grid gap-3 md:flex md:justify-between md:items-center ">
+            <div class="pb-4 grid gap-3 md:flex md:justify-between md:items-center ">
                 <div>
                     <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
                         {{ $menuName }}
@@ -20,7 +21,7 @@
                 <div>
                     <div class="inline-flex gap-x-2">
                         <a class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none"
-                            href="{{ route('keluarga.import') }}" wire:navigate>
+                            href="{{ route('keluarga.import') }}" >
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -31,7 +32,7 @@
                         </a>
 
                         <a class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                            href="{{ route('keluarga.create') }}" wire:navigate>
+                            href="{{ route('keluarga.create') }}" >
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -43,6 +44,22 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+                <div
+            class="p-4 relative mb-4 bg-white border border-gray-200 rounded-xl dark:bg-neutral-900 dark:border-neutral-700">
+            <!-- Header -->
+            <div
+                class="mb-2 pb-2 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
+                <div>
+                    <p class="text-md font-semibold text-gray-800 dark:text-neutral-200">
+                        Filter
+                    </p>
+                </div>
+            </div>
+
+            @include('livewire.admin.keluargas.filter-keluarga')
+
         </div>
 
         <div class="flex flex-col">
@@ -185,97 +202,7 @@
                                 </thead>
 
                                 <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                                    <tr>
-                                        <td class="h-px w-auto px-6 py-2 whitespace-nowrap">
-                                            <div class="relative max-w-xs">
-                                                <select multiple="" wire:model.live="searchBlok"
-                                                    data-hs-select='{        
-                                                        "hasSearch": true,
-                                                        "isSearchDirectMatch": false,
-                                                        "searchPlaceholder": "Search...",
-                                                        "searchClasses": "block w-full sm:text-sm border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-500 before:absolute before:inset-0 before:z-1 bg-gray-50 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 py-1.5 sm:py-2 px-3",
-                                                        "searchWrapperClasses": "bg-white p-2 -mx-1 sticky top-0 dark:bg-neutral-800",
-                                                        "placeholder": "Pilih data...",
-                                                        "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
-                                                        "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-2 px-3 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-gray-50 border border-gray-200 rounded-lg text-start text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:focus:outline-hidden dark:focus:ring-1 dark:focus:ring-neutral-600",
-                                                        "dropdownClasses": "mt-2 max-h-72 pb-1 px-1 space-y-0.5 z-20 w-full bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-50 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-800 dark:border-neutral-700",
-                                                        "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-50 rounded-lg focus:outline-hidden focus:bg-gray-50 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-400 dark:focus:bg-neutral-700",
-                                                        "optionTemplate": "<div class=\"flex items-center\"><div class=\"me-2\" data-icon></div><div><div class=\"hs-selected:font-semibold text-sm text-gray-800 dark:text-neutral-200\" data-title></div></div><div class=\"ms-auto\"><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-4 text-blue-600\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" viewBox=\"0 0 16 16\"><path d=\"M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z\"/></svg></span></div></div>",
-                                                        "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-400 \" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
-                                                    }'
-                                                    class="hidden">
-                                                    {{-- <option value=""></option> --}}
-                                                    @foreach ($bloks as $blok)
-                                                        <option value="{{ $blok->id }}">{{ $blok->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td class="h-px w-auto px-6 py-2 whitespace-nowrap">
-                                            <div class="relative max-w-xs">
-                                                <input type="text"
-                                                    class="py-1.5 sm:py-2 px-3 ps-9 block w-full border-gray-200 bg-gray-50 shadow-2xs rounded-lg sm:text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                                    placeholder="Cari nama keluarga" wire:model.live="searchName">
-                                                <div
-                                                    class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
-                                                    <svg class="size-4 text-gray-400 dark:text-neutral-500"
-                                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round">
-                                                        <circle cx="11" cy="11" r="8"></circle>
-                                                        <path d="m21 21-4.3-4.3"></path>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="h-px w-auto px-6 py-2 whitespace-nowrap">
-                                            <div class="relative max-w-xs">
-                                                <input type="text"
-                                                    class="py-1.5 sm:py-2 px-3 ps-9 block w-full border-gray-200 bg-gray-50 shadow-2xs rounded-lg sm:text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                                                    placeholder="Cari alamat/ RT RW/Prov. / Kota Kab./ Kec./ Kel."
-                                                    wire:model.live="searchAlamat">
-                                                <div
-                                                    class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
-                                                    <svg class="size-4 text-gray-400 dark:text-neutral-500"
-                                                        xmlns="http://www.w3.org/2000/svg" width="24"
-                                                        height="24" viewBox="0 0 24 24" fill="none"
-                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                                        stroke-linejoin="round">
-                                                        <circle cx="11" cy="11" r="8"></circle>
-                                                        <path d="m21 21-4.3-4.3"></path>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="h-px w-auto px-6 py-2 whitespace-nowrap">
-                                            <div class="relative max-w-xs">
-                                                <select wire:model.live="searchJarak"
-                                                    data-hs-select='{        
-                                                        "hasSearch": true,
-                                                        "searchLimit": 5,
-                                                        "searchPlaceholder": "Search...",
-                                                        "searchClasses": "block w-full sm:text-sm border-gray-200 rounded-lg focus:border-blue-500 focus:ring-blue-500 before:absolute before:inset-0 before:z-1 bg-gray-50 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 py-1.5 sm:py-2 px-3",
-                                                        "searchWrapperClasses": "bg-white p-2 -mx-1 sticky top-0 dark:bg-neutral-800",
-                                                        "placeholder": "Pilih data...",
-                                                        "toggleTag": "<button type=\"button\" aria-expanded=\"false\"><span class=\"me-2\" data-icon></span><span class=\"text-gray-800 dark:text-neutral-400 \" data-title></span></button>",
-                                                        "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-2 px-3 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-gray-50 border border-gray-200 rounded-lg text-start text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:focus:outline-hidden dark:focus:ring-1 dark:focus:ring-neutral-600",
-                                                        "dropdownClasses": "mt-2 max-h-72 pb-1 px-1 space-y-0.5 z-20 w-full bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-50 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-800 dark:border-neutral-700",
-                                                        "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-50 rounded-lg focus:outline-hidden focus:bg-gray-50 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-400 dark:focus:bg-neutral-700",
-                                                        "optionTemplate": "<div><div class=\"flex items-center\"><div class=\"me-2\" data-icon></div><div class=\"text-gray-800 dark:text-neutral-400 \" data-title></div></div></div>",
-                                                        "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-400 \" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
-                                                    }'
-                                                    class="hidden">
-                                                    <option value=""></option>
-                                                    @foreach ($jarakRumahs as $jarakRumah)
-                                                        <option value="{{ $jarakRumah->id }}">{{ $jarakRumah->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td></td>
-                                    </tr>
+                   
                                     @forelse ($keluargas as $keluarga)
                                         <tr :key="{{ $keluarga->id }}">
                                             <td class="h-px w-auto whitespace-nowrap">
@@ -341,12 +268,12 @@
                                                                     Actions
                                                                 </span>
                                                                 <a class="cursor-pointer flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300"
-                                                                    href="{{ route('keluarga.view', ['id' => $keluarga->id]) }}" wire:navigate>
+                                                                    href="{{ route('keluarga.view', ['id' => $keluarga->id]) }}" >
                                                                     Lihat
                                                                 </a>
                                                                 <a class="cursor-pointer flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300"
                                                                     href="{{ route('keluarga.edit', ['id' => $keluarga->id]) }}" 
-                                                                    {{-- wire:navigate --}}
+                                                                    {{--  --}}
                                                                     >
                                                                     Edit
                                                                 </a>

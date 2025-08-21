@@ -3,11 +3,12 @@
     <x-hs-preline />
 
     <!-- Table Section -->
-    <div class="max-w-[85rem] py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    {{-- <div class="max-w-[85rem] py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto"> --}}
+    <div class="max-w-[85rem] pb-10 sm:px-6 lg:pb-14 mx-auto">
         <!-- Card -->
         <div>
             <!-- Header -->
-            <div class="py-4 grid gap-3 md:flex md:justify-between md:items-center ">
+            <div class="pb-4 grid gap-3 md:flex md:justify-between md:items-center ">
                 <div>
                     <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
                         {{ $menuName }}
@@ -19,9 +20,9 @@
 
                 <div>
                     <div class="inline-flex gap-x-2">
-                        <button
+                        <button 
                             class="cursor-pointer py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none"
-                            wire:click="export" wire:loading.attr="disabled">
+                            wire:click="exportKepalaKeluarga" wire:loading.attr="disabled">
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -29,7 +30,19 @@
                                     d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
 
                             </svg>
-                            Excel
+                            Kepala Keluarga (Excel)
+                        </button>
+                        <button 
+                            class="cursor-pointer py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-hidden focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none"
+                            wire:click="exportKeluarga" wire:loading.attr="disabled">
+                            <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+
+                            </svg>
+                            Keluarga (Excel)
                         </button>
 
 

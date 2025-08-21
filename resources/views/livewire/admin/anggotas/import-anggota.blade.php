@@ -4,11 +4,12 @@
     <x-hs-preline />
 
     <!-- Table Section -->
-    <div class="max-w-[85rem] py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    {{-- <div class="max-w-[85rem] py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto"> --}}
+    <div class="max-w-[85rem] pb-10 sm:px-6 lg:pb-14 mx-auto">
         <!-- Card -->
         <div>
             <!-- Header -->
-            <div class="py-4 grid gap-3 md:flex md:justify-between md:items-center ">
+            <div class="pb-4 grid gap-3 md:flex md:justify-between md:items-center ">
                 <div>
                     <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
                         {{ $menuName }}
@@ -45,7 +46,7 @@
                         @endif
 
                         <a class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                            href="{{ route('anggota.index') }}" wire:navigate> View all
+                            href="{{ route('anggota.index') }}" > View all
                         </a>
                     </div>
                 </div>

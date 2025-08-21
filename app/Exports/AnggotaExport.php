@@ -24,7 +24,7 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
         $query = KeluargaAnggota::query();
 
         // Terapkan semua filter dari komponen Livewire
-        if (auth()->user()->role == 'majelis'){
+        if (auth()->user()->role == 'majelis') {
             $query->whereRelation('keluarga', 'blok_id', auth()->user()->blok_id)->get();
         }
         if ($this->filters->searchName) {
@@ -82,6 +82,45 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
         if ($this->filters->searchTgl_lahir_akhir) {
             $query->where('tgl_lahir', '<=', $this->filters->searchTgl_lahir_akhir);
         }
+
+        if ($this->filters->searchBlok) {
+            $query->whereHas('keluarga.blok', function ($q) {
+                $q->whereIn('id', $this->filters->searchBlok);
+            });
+        }
+        if ($this->filters->searchTgl_ulang_tahun_awal && $this->filters->searchTgl_ulang_tahun_akhir) {
+            $awal = date('m-d', strtotime($this->filters->searchTgl_ulang_tahun_awal));
+            $akhir = date('m-d', strtotime($this->filters->searchTgl_ulang_tahun_akhir));
+
+            if ($awal <= $akhir) {
+                // Range normal (misal 08-20 s/d 08-25)
+                $query->whereRaw("DATE_FORMAT(tgl_lahir, '%m-%d') BETWEEN ? AND ?", [$awal, $akhir]);
+            } else {
+                // Range lintas tahun (misal 12-20 s/d 01-10)
+                $query->where(function ($q) use ($awal, $akhir) {
+                    $q->whereRaw("DATE_FORMAT(tgl_lahir, '%m-%d') >= ?", [$awal])
+                        ->orWhereRaw("DATE_FORMAT(tgl_lahir, '%m-%d') <= ?", [$akhir]);
+                });
+            }
+        }
+
+        if ($this->filters->searchGenerasi) {
+            $query->where(function ($q) {
+                foreach ($this->filters->searchGenerasi as $genId) {
+                    $generasi = $this->filters->generasis->firstWhere('id', $genId);
+                    if ($generasi) {
+                        $tahunAwal = $generasi->tahun_awal;
+                        $tahunAkhir = $generasi->tahun_akhir;
+
+                        $q->orWhere(function ($sub) use ($tahunAwal, $tahunAkhir) {
+                            $sub->whereYear('tgl_lahir', '>=', $tahunAwal)
+                                ->whereYear('tgl_lahir', '<=', $tahunAkhir);
+                        });
+                    }
+                }
+            });
+        }
+
         if ($this->filters->searchTgl_babtis_awal) {
             $query->where('tgl_babtis', '>=', $this->filters->searchTgl_babtis_awal);
         }
@@ -109,20 +148,23 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
                 'Nomor Induk Gereja' => $item->nomor_induk_gereja,
                 'Hubungan keluarga' => $item->hubunganKeluarga?->name ?? '-',
                 'Status perkawinan' => $item->perkawinan?->name ?? '-',
-                'Tanggal lahir' => $item->tgl_lahir,
+                // 'Tanggal lahir' => $item->tgl_lahir,
+                'Tanggal lahir' => \Carbon\Carbon::parse($item->tgl_lahir)->format('d-m-Y'),
                 'Golongan darah' => $item->golDarah?->name ?? '-',
                 'Ijasah terakhir' => $item->ijazah?->name ?? '-',
                 'Kegiatan/ Pekerjaan' => $item->pekerjaan?->name ?? '-',
                 'RPendapatan per bulan' => $item->pendapatan?->name ?? '-',
                 'Tempat baptis anak' => $item->tempatBabtis?->name ?? '-',
-                'Tanggal baptis anak' => $item->tgl_babtis,
+                // 'Tanggal baptis anak' => $item->tgl_babtis,
+                'Tanggal baptis anak' => \Carbon\Carbon::parse($item->tgl_babtis)->format('d-m-Y'),
                 'Tempat baptis dewasa/ Sidi' => $item->tempatSidi?->name ?? '-',
-                'Tanggal baptis dewasa/ Sidi' => $item->tgl_sidi,
+                // 'Tanggal baptis dewasa/ Sidi' => $item->tgl_sidi,
+                'Tanggal baptis dewasa' => \Carbon\Carbon::parse($item->tgl_sidi)->format('d-m-Y'),
                 'Talenta/ Hobi' => $item->hobi?->name ?? '-',
                 'Aktivitas pelayanan yg aktif diikuti' => $item->aktifitas_pelayanan,
-                'Memiliki bpjs atau asuransi lainnya' => ($item->memiliki_bpjs_asuransi == '1')? 'Ya' : 'Tidak',
+                'Memiliki bpjs atau asuransi lainnya' => ($item->memiliki_bpjs_asuransi == '1') ? 'Ya' : 'Tidak',
                 'Apakah mempunyai penyakit kronis' => $item->penyakit?->name ?? '-',
-                'Domisili di alamat ini' => ($item->domisili_alamat == '1')? 'Ya' : 'Tidak',
+                'Domisili di alamat ini' => ($item->domisili_alamat == '1') ? 'Ya' : 'Tidak',
                 'Nomor WA' => $item->nomor_wa,
             ];
         });

@@ -3,11 +3,12 @@
     <x-hs-preline />
 
     <!-- Table Section -->
-    <div class="max-w-[85rem] py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    {{-- <div class="max-w-[85rem] py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto"> --}}
+    <div class="max-w-[85rem] pb-10 sm:px-6 lg:pb-14 mx-auto">
         <!-- Card -->
         <div>
             <!-- Header -->
-            <div class="py-4 grid gap-3 md:flex md:justify-between md:items-center ">
+            <div class="pb-4 grid gap-3 md:flex md:justify-between md:items-center ">
                 <div>
                     <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
                         {{ $menuName }}
@@ -20,7 +21,7 @@
                 <div>
                     <div class="inline-flex gap-x-2">
                         <a class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                            href="{{ route('tempat_babtis.create') }}" wire:navigate>
+                            href="{{ route('tempat_babtis.create') }}" >
                             <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round">
@@ -194,7 +195,7 @@
                                                                     Actions
                                                                 </span>
                                                                 <a class="cursor-pointer flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300"
-                                                                    href="{{ route('tempat_babtis.edit', ['id' => $tempat_babtis->id]) }}" wire:navigate>
+                                                                    href="{{ route('tempat_babtis.edit', ['id' => $tempat_babtis->id]) }}" >
                                                                     Edit
                                                                 </a>
                                                             </div>

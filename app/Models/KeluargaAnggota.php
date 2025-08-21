@@ -55,7 +55,7 @@ class KeluargaAnggota extends Model
 
     public function keluarga(): BelongsTo
     {
-        return $this->belongsTo(keluarga::class);
+        return $this->belongsTo(Keluarga::class);
     }
     public function user(): BelongsTo
     {
