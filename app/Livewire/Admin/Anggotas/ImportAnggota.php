@@ -57,7 +57,7 @@ class ImportAnggota extends Component
         $this->validate([
             'fileImport' => 'required|file|mimes:xlsx,xls,csv'
         ]);
-        // dd('asasa');
+        // dd($this->fileImport);
 
         // $importer = new AnggotaImport;
         // Excel::import($importer, $this->fileImport)->first();
@@ -85,9 +85,13 @@ class ImportAnggota extends Component
     public function saveConfirmed()
     {
         foreach (KeluargaAnggotaDummy::where('user_id_input', auth()->user()->id)->get() as $dummy) {
+            $dummy->tgl_babtis = ($dummy->tgl_babtis != '') ? $dummy->tgl_babtis : null;
+            $dummy->tgl_sidi = ($dummy->tgl_sidi != '') ? $dummy->tgl_sidi : null;
+            $dummy->tgl_wafat = ($dummy->tgl_wafat != '') ? $dummy->tgl_wafat : null;
             if ($dummy->keluarga_anggota_id) {
                 // update
-                KeluargaAnggota::find($dummy->keluarga_anggota_id)->update([
+                $keluarga_anggota = KeluargaAnggota::find($dummy->keluarga_anggota_id);
+                $keluarga_anggota->update([
                     // 'keluarga_id' => $dummy->keluarga_id,
                     // 'name' => $dummy->name,
                     'jns_kelamin' => $dummy->jns_kelamin,
@@ -103,18 +107,19 @@ class ImportAnggota extends Component
                     'tgl_babtis' => $dummy->tgl_babtis,
                     'tempat_sidi_id' => $dummy->tempat_sidi_id,
                     'tgl_sidi' => $dummy->tgl_sidi,
-                    'hobi_id' => $dummy->hobi_id,
+                    // 'hobi_id' => $dummy->hobi_id,
                     'aktifitas_pelayanan' => $dummy->aktifitas_pelayanan,
                     'memiliki_bpjs_asuransi' => $dummy->memiliki_bpjs_asuransi,
-                    'penyakit_id' => $dummy->penyakit_id,
+                    // 'penyakit_id' => $dummy->penyakit_id,
                     'domisili_alamat' => $dummy->domisili_alamat,
                     'nomor_wa' => $dummy->nomor_wa,
-                    'is_wafat' => $dummy->is_wafat,
+                    // 'is_wafat' => $dummy->is_wafat,
                     'tgl_wafat' => $dummy->tgl_wafat,
+                    'status_anggota_id' => $dummy->status_anggota_id,
                 ]);
             } else {
                 // insert baru
-                KeluargaAnggota::create([
+                $keluarga_anggota = KeluargaAnggota::create([
                     'keluarga_id' => $dummy->keluarga_id,
                     'name' => $dummy->name,
                     'jns_kelamin' => $dummy->jns_kelamin,
@@ -130,16 +135,25 @@ class ImportAnggota extends Component
                     'tgl_babtis' => $dummy->tgl_babtis,
                     'tempat_sidi_id' => $dummy->tempat_sidi_id,
                     'tgl_sidi' => $dummy->tgl_sidi,
-                    'hobi_id' => $dummy->hobi_id,
+                    // 'hobi_id' => $dummy->hobi_id,
                     'aktifitas_pelayanan' => $dummy->aktifitas_pelayanan,
                     'memiliki_bpjs_asuransi' => $dummy->memiliki_bpjs_asuransi,
-                    'penyakit_id' => $dummy->penyakit_id,
+                    // 'penyakit_id' => $dummy->penyakit_id,
                     'domisili_alamat' => $dummy->domisili_alamat,
                     'nomor_wa' => $dummy->nomor_wa,
                     'is_wafat' => $dummy->is_wafat,
                     'tgl_wafat' => $dummy->tgl_wafat,
-                    'is_wafat' => '0',
+                    'status_anggota_id' => $dummy->status_anggota_id,
+                    // 'is_wafat' => '0',
                 ]);
+            }
+            if (is_array($dummy->hobi_id)) {
+                $keluarga_anggota->recordHobi()->sync($dummy->hobi_id);
+            }
+
+            // STEP 3 — Sync penyakit (JSON → pivot)
+            if (is_array($dummy->penyakit_id)) {
+                $keluarga_anggota->recordPenyakit()->sync($dummy->penyakit_id);
             }
         }
         KeluargaAnggotaDummy::where('user_id_input', auth()->user()->id)->delete();
@@ -165,7 +179,7 @@ class ImportAnggota extends Component
 
     public function loadAnggotas()
     {
-        $query = KeluargaAnggotaDummy::query();
+        $query = KeluargaAnggotaDummy::query()->where('user_id_input', auth()->user()->id);
 
         if ($this->searchName) {
             $query->where('name', 'like', '%' . $this->searchName . '%');

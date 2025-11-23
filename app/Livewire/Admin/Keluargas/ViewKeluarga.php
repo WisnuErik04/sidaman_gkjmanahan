@@ -50,7 +50,21 @@ class ViewKeluarga extends Component
         }
         $this->loadEdit($id);
 
-        $this->anggotas = KeluargaAnggota::where('keluarga_id', $id)
+        $this->anggotas = KeluargaAnggota::with([
+            'status',
+            'hubunganKeluarga',
+            'perkawinan',
+            'golDarah',
+            'ijazah',
+            'pekerjaan',
+            'pendapatan',
+            'tempatBabtis',
+            'tempatSidi',
+            // 'hobi',
+            // 'penyakit',
+            'recordPenyakit',
+            'recordHobi',
+        ])->where('keluarga_id', $id)
             ->orderBy('hubungan_keluarga_id')->orderBy('tgl_lahir')->get();
     }
 

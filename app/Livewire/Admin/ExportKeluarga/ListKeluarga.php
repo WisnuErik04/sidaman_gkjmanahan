@@ -132,6 +132,7 @@ class ListKeluarga extends Component
     public function resetFilter()
     {
         $this->reset();
+        $this->mount();
         $this->resetPage();
     }
 

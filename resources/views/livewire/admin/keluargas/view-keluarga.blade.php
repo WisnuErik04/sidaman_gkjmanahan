@@ -391,31 +391,31 @@
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_lahir }}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_lahir ? \Carbon\Carbon::parse($anggota->tgl_lahir)->format('d-m-Y') : '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->golDarah->name }}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->golDarah->name ?? '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->ijazah->name }}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->ijazah->name ?? '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->pekerjaan->name }}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->pekerjaan->name ?? '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->pendapatan->name }}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->pendapatan->name ?? '-' }}</span>
                                                 </div>
                                             </td>
 
@@ -530,6 +530,12 @@
                                                 Nomor WA
                                             </span>
                                         </th>
+                                        <th scope="col" class="px-6 py-3 text-start">
+                                            <span
+                                                class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
+                                                Status
+                                            </span>
+                                        </th>
                                     </tr>
                                 </thead>
 
@@ -539,32 +545,34 @@
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="font-semibold text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tempatBabtis->name }}
+                                                        class="font-semibold text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tempatBabtis->name ?? '-'}}
                                                     </span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_babtis }}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_babtis ? \Carbon\Carbon::parse($anggota->tgl_babtis)->format('d-m-Y') : '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tempatSidi->name }}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tempatSidi->name ?? '-'}}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_sidi }}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_sidi ? \Carbon\Carbon::parse($anggota->tgl_sidi)->format('d-m-Y') : '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->hobi->name }}</span>
+                                                        {{-- class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->hobi->name }}</span> --}}
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->recordHobi->pluck('name')->implode(', ') ?? '-' }}</span>
+
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
@@ -589,7 +597,9 @@
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->penyakit->name }}</span>
+                                                        {{-- class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->penyakit->name }}</span> --}}
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->recordPenyakit->pluck('name')->implode(', ') ?? '-' }}</span>
+
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
@@ -609,6 +619,18 @@
                                                 <div class="px-6 py-2">
                                                     <span
                                                         class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->nomor_wa }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="h-px w-auto whitespace-nowrap">
+                                                <div class="px-6 py-2">
+                                                    <span
+                                                        class="font-semibold text-sm text-gray-800 dark:text-neutral-200">
+                                                        {{ $anggota->status->name ?? '-' }}
+
+                                                        @if (($anggota->status->name ?? '') === 'Meninggal')
+                                                            {{ $anggota->tgl_wafat ? '('.\Carbon\Carbon::parse($anggota->tgl_wafat)->format('d-m-Y') .')': '-' }}
+                                                        @endif
+                                                    </span>
                                                 </div>
                                             </td>
 

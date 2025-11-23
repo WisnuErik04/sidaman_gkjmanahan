@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class TempatSidi extends Model
 {
     protected $fillable = ['name'];
-    public function keluarga(): HasMany
+    public function keluargaAnggota(): HasMany
     {
-        return $this->hasMany(Keluarga::class, 'tempat_sidi_id');
+        return $this->hasMany(KeluargaAnggota::class, 'tempat_sidi_id');
     }
 }

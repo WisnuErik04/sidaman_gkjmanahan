@@ -45,11 +45,11 @@ class Login extends Component
         Session::regenerate();
         // dd(Auth::user(), Auth::user()->role);
         if(Auth::user()->role == 'admin'){
-            $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: true);
+            $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: false);
         } else if (Auth::user()->role == 'majelis') {
-            $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: true);
+            $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: false);
         } else{
-            $this->redirectIntended(default: route('warga.dashboard', absolute: false), navigate: true);
+            $this->redirectIntended(default: route('warga.dashboard', absolute: false), navigate: false);
         }
     }
 

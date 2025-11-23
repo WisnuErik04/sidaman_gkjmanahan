@@ -24,21 +24,23 @@ class KeluargaAnggotaTemplateExportSheet implements FromCollection, WithTitle, W
             '12345678',                // Nomor Induk Gereja
             '1',                        // Hubungan keluarga (kode)
             '2',                        // Status perkawinan (kode)
-            '1980-01-15',              // Tanggal lahir
-            'O',                        // Golongan darah (kode)
+            '15-01-1980',              // Tanggal lahir
+            '1',                        // Golongan darah (kode)
             '8',                       // Ijasah terakhir (kode)
             '6',                      // Kegiatan/ Pekerjaan (kode)
-            '5000000',                 // Pendapatan per bulan (kode)
+            '1',                 // Pendapatan per bulan (kode)
             '1',                        // Tempat baptis anak (kode)
-            '1985-06-01',              // Tanggal baptis anak
+            '01-06-1985',              // Tanggal baptis anak
             '2',                        // Tempat baptis dewasa/ Sidi (kode)
-            '2000-08-20',              // Tanggal baptis dewasa/ Sidi
-            '5',                    // Talenta/ Hobi (kode)
+            '20-08-2000',              // Tanggal baptis dewasa/ Sidi
+            '5, 3,4',                    // Talenta/ Hobi (kode)
             'Paduan Suara',             // Aktivitas pelayanan yg aktif diikuti
             'Y',                        // Memiliki bpjs atau asuransi lainnya (kode)
             '0',                        // Apakah mempunyai penyakit kronis (kode)
             'Y',                        // Domisili di alamat ini (kode)
             '081234567890',            // Nomor WA
+            '3',                        // Status
+            '',                         // Tanggal wafat
         ],
         [
             'Yohanes Adi',
@@ -48,21 +50,23 @@ class KeluargaAnggotaTemplateExportSheet implements FromCollection, WithTitle, W
             '87654321',
             '2',
             '1',
-            '2005-04-12',
+            '12-04-2005',
             '3',
             '7',
             '3',
             '2',
             '1',
-            '2006-05-01',
+            '01-05-2006',
             '1',
-            '1999-04-05',
+            '05-04-1999',
             '2',
             'Remaja Gereja',
             'Y',
             '0',
             'Y',
             '081298765432',
+            '1',
+            '',
         ],
         [
             'Maria Indah',
@@ -72,21 +76,23 @@ class KeluargaAnggotaTemplateExportSheet implements FromCollection, WithTitle, W
             '11223344',
             '1',
             '3',
-            '1975-09-20',
+            '20-09-1975',
             '2',
             '2',
             '4',
             '2',
             '1',
-            '1980-07-10',
+            '10-07-1980',
             '2',
-            '1995-10-15',
+            '15-10-1995',
             '7',
             'Komisi Anak Gereja',
             'N',
             '1',
             'Y',
             '081312345678',
+            '6',
+            '15-10-2005',
         ]
         ]);
     }
@@ -116,6 +122,8 @@ class KeluargaAnggotaTemplateExportSheet implements FromCollection, WithTitle, W
             'Apakah mempunyai penyakit kronis (kode)',
             'Domisili di alamat ini (Y/N)',
             'Nomor WA',
+            'Status (kode)',
+            'Tanggal wafat',
         ];
     }
 
@@ -149,6 +157,8 @@ class KeluargaAnggotaTemplateExportSheet implements FromCollection, WithTitle, W
             'T' => 10,
             'U' => 10,
             'V' => 25,
+            'W' => 10,
+            'x' => 25,
         ];
     }
 }

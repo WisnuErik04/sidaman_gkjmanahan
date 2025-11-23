@@ -11,6 +11,7 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Title;
 use Masmerise\Toaster\Toaster;
 use App\Models\KeluargaAnggota;
+use Illuminate\Support\Facades\DB;
 
 #[Title('Data Keluarga | Sidaman')]
 class KeluargaList extends Component
@@ -28,15 +29,25 @@ class KeluargaList extends Component
     {
         if ($this->idToDelete) {
             $anggota_details = KeluargaAnggota::where('keluarga_id', $this->idToDelete)->get();
-            foreach ($anggota_details as $anggota_detail) {
-                if ($anggota_detail->user_id) {
-                    User::findOrFail($anggota_detail->user_id)->delete();
+            DB::beginTransaction();
+            try {
+                foreach ($anggota_details as $anggota_detail) {
+                    if ($anggota_detail->user_id) {
+                        User::findOrFail($anggota_detail->user_id)->delete();
+                    }
+                    $anggota_details->recordHobi()->detach();
+                    $anggota_details->recordPenyakit()->detach();
+                    $anggota_details->delete();
                 }
+                // KeluargaAnggota::where('keluarga_id', $this->idToDelete)->delete();
+                Keluarga::findOrFail($this->idToDelete)->delete();
+                DB::commit();
+                Toaster::success('Data deleted successfully!');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Toaster::error('Gagal menghapus: ' . $e->getMessage());
             }
-            KeluargaAnggota::where('keluarga_id', $this->idToDelete)->delete();
-            Keluarga::findOrFail($this->idToDelete)->delete();
             $this->idToDelete = null;
-            Toaster::success('Data deleted successfully!');
             $this->dispatch('close-delete-modal');
         }
     }
@@ -48,10 +59,10 @@ class KeluargaList extends Component
     //     Toaster::success('keluarga deleted successfully!');
     //     return redirect()->route('keluarga.index');
     // }
-    
+
     use WithPagination;
     public $menuName = "Keluarga";
-    
+
     public $bloks = [];
     public $jarakRumahs = [];
 
@@ -59,7 +70,7 @@ class KeluargaList extends Component
     public $searchName = '';
     public $searchAlamat = '';
     public $searchJarak = '';
-    
+
     public $perPage = 10;
     public $sortDirection1 = 'asc';    // Default arah sorting
     public $sortDirection2 = 'asc';    // Default arah sorting
@@ -69,7 +80,7 @@ class KeluargaList extends Component
     public function mount()
     {
         $this->bloks = Blok::all();
-        if (auth()->user()->role == 'majelis'){
+        if (auth()->user()->role == 'majelis') {
             $this->bloks = Blok::where('id', auth()->user()->blok_id)->get();
         }
         $this->jarakRumahs = JarakRumah::all();
@@ -87,26 +98,26 @@ class KeluargaList extends Component
     public function loadKeluargas()
     {
         $query = Keluarga::query();
-    
+
         // Filter nama keluarga
-        if (auth()->user()->role == 'majelis'){
+        if (auth()->user()->role == 'majelis') {
             $query->where('blok_id', auth()->user()->blok_id);
         }
 
         if ($this->searchName) {
             $query->where('keluargas.name', 'like', '%' . $this->searchName . '%');
         }
-    
+
         // Filter berdasarkan alamat dan relasi wilayah
         if ($this->searchAlamat) {
             $query->where(function ($q) {
                 $q->where('alamat_detail', 'like', '%' . $this->searchAlamat . '%')
-                  ->orWhere('alamat_rt', 'like', '%' . $this->searchAlamat . '%')
-                  ->orWhere('alamat_rw', 'like', '%' . $this->searchAlamat . '%')
-                  ->orWhereRelation('desaKelurahan', 'name', 'like', '%' . $this->searchAlamat . '%')
-                  ->orWhereRelation('kecamatan', 'name', 'like', '%' . $this->searchAlamat . '%')
-                  ->orWhereRelation('kabKota', 'name', 'like', '%' . $this->searchAlamat . '%')
-                  ->orWhereRelation('provinsi', 'name', 'like', '%' . $this->searchAlamat . '%');
+                    ->orWhere('alamat_rt', 'like', '%' . $this->searchAlamat . '%')
+                    ->orWhere('alamat_rw', 'like', '%' . $this->searchAlamat . '%')
+                    ->orWhereRelation('desaKelurahan', 'name', 'like', '%' . $this->searchAlamat . '%')
+                    ->orWhereRelation('kecamatan', 'name', 'like', '%' . $this->searchAlamat . '%')
+                    ->orWhereRelation('kabKota', 'name', 'like', '%' . $this->searchAlamat . '%')
+                    ->orWhereRelation('provinsi', 'name', 'like', '%' . $this->searchAlamat . '%');
             });
         }
 
@@ -117,24 +128,24 @@ class KeluargaList extends Component
         if ($this->searchJarak) {
             $query->where('jarak_rumah_id', $this->searchJarak);
         }
-    
+
         // Sorting
         if ($this->sortField1 === 'blok') {
             $query->join('bloks', 'keluargas.blok_id', '=', 'bloks.id')
-                  ->orderBy('bloks.name', $this->sortDirection1)
-                  ->select('keluargas.*');
+                ->orderBy('bloks.name', $this->sortDirection1)
+                ->select('keluargas.*');
         }
         if ($this->sortField2 === 'name') {
             $query->orderBy('name', $this->sortDirection2);
-        } 
-        
+        }
+
         // Trigger frontend reactivity
         $this->dispatch('reinit-hsselect');
-    
+
         // Pagination
         return $query->paginate($this->perPage);
     }
-    
+
 
     // Filtering
     public function updatingSearchBlok()

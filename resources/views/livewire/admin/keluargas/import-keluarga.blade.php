@@ -105,10 +105,21 @@
                         <h4 class="font-bold mb-2">Baris yang gagal diimpor:</h4>
                         <ul class="list-disc ms-6 text-sm">
                             @foreach (session('import_keluarga_errors') as $error)
-                                <li>Baris {{ $error['baris'] }} ({{ $error['nama'] ?? '-' }}):
+                                {{-- <li>Baris {{ $error['baris'] }} ({{ $error['nama'] ?? '-' }}):
                                     {{ collect($error)->except('baris', 'nama')->filter(fn($v) => $v !== 'OK')->keys()->implode(', ') }}
                                     tidak ditemukan
-                                </li>
+                                </li> --}}
+                                 @if ($error['baris'] > 0 && $error['baris'] != $error['baris']-1)
+                                    <li>Baris {{ $error['baris'] }} ({{ $error['nama'] ?? '-' }}):
+                                        {{ collect($error)->except('baris', 'nama')->filter(fn($v) => $v !== 'OK')->keys()->implode(', ') }}
+                                        tidak ditemukan
+                                    </li>
+                                @else    
+                                    <li>Baris {{ $error['baris'] }} ({{ $error['nama'] ?? '-' }}):
+                                        {{ collect($error)->except('baris', 'nama')->filter(fn($v) => $v !== 'OK')->keys()->implode(', ') }}
+                                        tidak ditemukan
+                                    </li>
+                                @endif 
                             @endforeach
                         </ul>
                     </div>

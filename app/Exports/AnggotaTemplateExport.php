@@ -21,6 +21,7 @@ class AnggotaTemplateExport implements WithMultipleSheets
             new TempatSidiSheet(),
             new HobiSheet(),
             new PenyakitSheet(),
+            new StatusSheet(),
         ];
     }
 }

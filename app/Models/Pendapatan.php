@@ -9,8 +9,8 @@ class Pendapatan extends Model
 {
     protected $fillable = ['name'];
 
-    public function keluarga(): HasMany
+    public function keluargaAnggota(): HasMany
     {
-        return $this->hasMany(Keluarga::class, 'pendapatan_id');
+        return $this->hasMany(KeluargaAnggota::class, 'pendapatan_id');
     }
 }

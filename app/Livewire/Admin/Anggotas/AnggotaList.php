@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\Anggotas;
 
+use Carbon\Carbon;
 use App\Models\Blok;
+use App\Models\User;
 use App\Models\anggota;
 use Livewire\Component;
 use App\Models\JarakRumah;
@@ -11,8 +13,7 @@ use App\Models\anggotaAnggota;
 use Livewire\Attributes\Title;
 use Masmerise\Toaster\Toaster;
 use App\Models\KeluargaAnggota;
-use App\Models\User;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 #[Title('Data Anggota Keluarga | Sidaman')]
 class AnggotaList extends Component
@@ -30,13 +31,45 @@ class AnggotaList extends Component
     {
         if ($this->idToDelete) {
             $anggota_details = KeluargaAnggota::find($this->idToDelete);
-            if ($anggota_details->user_id) {
-                User::findOrFail($anggota_details->user_id)->delete();
+            if (!$anggota_details) {
+                Toaster::error('Data anggota tidak ditemukan!');
+                $this->dispatch('close-delete-modal');
+                return;
             }
-            KeluargaAnggota::findOrFail($this->idToDelete)->delete();
+            // if ($anggota_details->user_id) {
+            //     $anggota_details->recordHobi()->detach();
+            //     $anggota_details->recordPenyakit()->detach();
+            //     $anggota_details->delete();
+            //     // KeluargaAnggota::findOrFail($this->idToDelete)->delete();
+            //     User::where('id', $anggota_details->user_id)->delete();
+            //     // User::findOrFail($anggota_details->user_id)->delete();
+            // }
+
+            DB::beginTransaction();
+            try {
+
+                if ($anggota_details->user_id) {
+                    // KeluargaAnggota::findOrFail($this->idToDelete)->delete();
+                    User::where('id', $anggota_details->user_id)->delete();
+                    // User::findOrFail($anggota_details->user_id)->delete();
+                }
+                $anggota_details->recordHobi()->detach();
+                $anggota_details->recordPenyakit()->detach();
+                $anggota_details->delete();
+
+                DB::commit();
+                Toaster::success('Data deleted successfully!');
+                // Toaster::success('Data berhasil dihapus!');
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Toaster::error('Gagal menghapus: ' . $e->getMessage());
+            }
+
             $this->idToDelete = null;
-            Toaster::success('Data deleted successfully!');
             $this->dispatch('close-delete-modal');
+            // return $query->loadanggotas();
+
         }
     }
 

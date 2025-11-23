@@ -42,16 +42,33 @@ class AnggotaView extends Component
         // dd($this->anggotas->name);
         $this->provinsis = Wilayah::whereRaw('CHAR_LENGTH(kode) = 2')->orderBy('name', 'ASC')->get();
         $this->bloks = Blok::all();
-        $this->jarakRumahs = JarakRumah::all();
+        $this->jarakRumahs = JarakRumah::all(); 
         
         // $this->anggotas = KeluargaAnggota::find($id);
         $this->keluarga_details = Keluarga::find($this->anggotas->keluarga_id);
         // if (auth()->user()->role === 'majelis' && $this->keluarga_details->blok_id !== auth()->user()->blok_id) {
         //     return redirect()->route('anggota.index');
         // };
-        $this->anggotas = KeluargaAnggota::where('keluarga_id', $this->anggotas->keluarga_id)
+        $this->anggotas = KeluargaAnggota::with([
+            'status',
+            'hubunganKeluarga',
+            'perkawinan',
+            'golDarah',
+            'ijazah',
+            'pekerjaan',
+            'pendapatan',
+            'tempatBabtis',
+            'tempatSidi',
+            // 'hobi',
+            // 'penyakit',
+            'recordPenyakit',
+            'recordHobi',
+        ])->where('keluarga_id', $this->anggotas->keluarga_id)
             ->orderBy('hubungan_keluarga_id')->orderBy('tgl_lahir')->get();
         $this->loadEdit();
+        // $this->anggotas = KeluargaAnggota::where('keluarga_id', $this->anggotas->keluarga_id)
+        //     ->orderBy('hubungan_keluarga_id')->orderBy('tgl_lahir')->get();
+        // $this->loadEdit();
     }
 
     public function loadEdit(){

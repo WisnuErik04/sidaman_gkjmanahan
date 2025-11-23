@@ -16,6 +16,7 @@ use App\Models\TempatSidi;
 use App\Models\TempatBabtis;
 use Livewire\WithPagination;
 use App\Exports\JemaatExport;
+use App\Models\StatusAnggota;
 use App\Exports\AnggotaExport;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Title;
@@ -54,6 +55,8 @@ class ListAnggota extends Component
     public $searchTgl_sidi_akhir = '';
     public $searchBlok = '';
     public $searchGenerasi = '';
+    public $searchStatus = '';
+    public $searchKelompokUsia = '';
 
     public $hubunganKeluargas;
     public $perkawinans;
@@ -67,6 +70,8 @@ class ListAnggota extends Component
     public $penyakits;
     public $bloks = [];
     public $generasis;
+    public $statuses;
+    public $kelompokUsias;
 
     public $perPage = 10;
     public $sortDirection1 = 'asc';    // Default arah sorting
@@ -85,7 +90,8 @@ class ListAnggota extends Component
         $this->tempatSidis = TempatSidi::all();
         $this->hobis = Hobi::all();
         $this->penyakits = Penyakit::all();
-
+        $this->statuses = StatusAnggota::all();
+        $this->searchStatus = ['1', '2', '3', '4'];
         // $this->generasis = [
         //     0 => [
         //         'id' => 1,
@@ -164,6 +170,39 @@ class ListAnggota extends Component
             ],
         ]);
 
+        $this->kelompokUsias = collect([
+            (object)[
+                'id' => 1,
+                'name' => 'Anak - anak (< 13 Tahun)',
+                "min_age" => 0,
+                "max_age" => 12,
+            ],
+            (object)[
+                'id' => 2,
+                'name' => 'Remaja (13 - 17 Tahun)',
+                "min_age" => 13,
+                "max_age" => 17,
+            ],
+            (object)[
+                'id' => 3,
+                'name' => 'Pemuda (18 - 30 Tahun)',
+                "min_age" => 18,
+                "max_age" => 30,
+            ],
+            (object)[
+                'id' => 4,
+                'name' => 'Dewasa (31 - 60 Tahun)',
+                "min_age" => 31,
+                "max_age" => 60,
+            ],
+            (object)[
+                'id' => 5,
+                'name' => 'Lansia (> 60 Tahun)',
+                "min_age" => 61,
+                "max_age" => null,
+            ]
+        ]);
+
 
         $this->bloks = Blok::all();
         if (auth()->user()->role == 'majelis') {
@@ -217,11 +256,20 @@ class ListAnggota extends Component
             $query->whereIn('tempat_sidi_id', $this->searchTempatSidi);
         }
         if ($this->searchHobi) {
-            $query->whereIn('hobi_id', $this->searchHobi);
+            $hobiIds = $this->searchHobi;
+            $query->whereHas('recordHobi', function ($hobiQuery) use ($hobiIds) {
+                $hobiQuery->whereIn('hobi_id', $hobiIds);
+            });
         }
         if ($this->searchPenyakit) {
-            $query->whereIn('penyakit_id', $this->searchPenyakit);
+            $penyakitIds = $this->searchPenyakit;
+            $query->whereHas('recordPenyakit', function ($penyakitQuery) use ($penyakitIds) {
+                $penyakitQuery->whereIn('penyakit_id', $penyakitIds);
+            });
         }
+        // if ($this->searchPenyakit) {
+        //     $query->whereIn('penyakit_id', $this->searchPenyakit);
+        // }
 
         // Filter berdasarkan alamat dan relasi wilayah
         if ($this->searchKeluarga) {
@@ -280,6 +328,43 @@ class ListAnggota extends Component
             });
         }
 
+        if ($this->searchKelompokUsia) {
+            $today = now();
+            $query->where(function ($q) use ($today) {
+                foreach ($this->searchKelompokUsia as $kelUsiaId) {
+                    $kelompokUsia = $this->kelompokUsias->firstWhere('id', $kelUsiaId);
+                    if ($kelompokUsia) {
+                        $minAge = $kelompokUsia->min_age;
+                        $maxAge = $kelompokUsia->max_age;
+
+                        // $tahunSekarang = now()->year;
+                        // $tahunAkhir = $tahunSekarang - $minAge;
+                        // $tahunAwal = $tahunSekarang - $maxAge;
+                        // if ($kelompokUsia->max_age === null || $kelompokUsia->max_age === 0) {
+                        //     $tahunAwal = 1900;
+                        // }
+                        // $q->orWhere(function ($sub) use ($tahunAwal, $tahunAkhir) {
+                        //     $sub->whereYear('tgl_lahir', '>=', $tahunAwal)
+                        //         ->whereYear('tgl_lahir', '<=', $tahunAkhir);
+                        // });
+
+
+                        $youngestBirthdate = $today->copy()->subYears($minAge);
+                        if ($kelompokUsia->max_age === null || $kelompokUsia->max_age === 0) {
+                            $oldestBirthdate = Carbon::parse('1900-01-01'); // Tahun sangat tua
+                        } else {
+                            $oldestBirthdate = $today->copy()->subYears($maxAge);
+                        }
+                        $q->orWhere(function ($sub) use ($oldestBirthdate, $youngestBirthdate) {
+
+                            $sub->where('tgl_lahir', '>=', $oldestBirthdate->toDateString())
+                                ->where('tgl_lahir', '<=', $youngestBirthdate->toDateString());
+                        });
+                    }
+                }
+            });
+        }
+
         if ($this->searchTgl_babtis_awal) {
             $query->where('tgl_babtis', '>=', $this->searchTgl_babtis_awal);
         }
@@ -297,6 +382,10 @@ class ListAnggota extends Component
         if ($this->sortField1 === 'name') {
             $query->orderBy('name', $this->sortDirection1);
         }
+        //         dd([
+        //     'sql' => $query->toSql(),
+        //     'bindings' => $query->getBindings(),
+        // ]);
         // Trigger frontend reactivity
         $this->dispatch('reinit-hsselect');
 
@@ -307,6 +396,7 @@ class ListAnggota extends Component
     public function resetFilter()
     {
         $this->reset();
+        $this->mount();
         $this->resetPage();
     }
 

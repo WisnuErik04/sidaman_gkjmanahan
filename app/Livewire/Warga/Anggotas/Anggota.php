@@ -14,6 +14,7 @@ use App\Models\Pendapatan;
 use App\Models\Perkawinan;
 use App\Models\TempatSidi;
 use App\Models\TempatBabtis;
+use App\Models\StatusAnggota;
 use Livewire\Attributes\Title;
 use Masmerise\Toaster\Toaster;
 use App\Models\KeluargaAnggota;
@@ -40,15 +41,18 @@ class Anggota extends Component
         $tgl_babtis,
         $tempat_sidi_id,
         $tgl_sidi,
-        $hobi_id,
+        // $hobi_id,
         $aktifitas_pelayanan,
         $memiliki_bpjs_asuransi,
-        $penyakit_id,
+        // $penyakit_id,
         $domisili_alamat,
         $nomor_wa,
         $is_wafat,
-        $tgl_wafat;
+        $tgl_wafat,
+        $status_anggota_id;
 
+    public $hobi_id = []; 
+    public $penyakit_id = [];
     public $anggota_details;
     public $keluargas = [];
     public $hubunganKeluargas = [];
@@ -61,6 +65,7 @@ class Anggota extends Component
     public $tempatSidis = [];
     public $hobis = [];
     public $penyakits = [];
+    public $statuses = [];
 
     public function mount()
     {
@@ -78,6 +83,7 @@ class Anggota extends Component
         $this->tempatSidis = TempatSidi::all();
         $this->hobis = Hobi::all();
         $this->penyakits = Penyakit::all();
+        $this->statuses = StatusAnggota::all();
         $this->loadEdit();
     }
 
@@ -103,14 +109,17 @@ class Anggota extends Component
             'tgl_babtis' => $this->anggota_details->tgl_babtis,
             'tempat_sidi_id' => $this->anggota_details->tempat_sidi_id,
             'tgl_sidi' => $this->anggota_details->tgl_sidi,
-            'hobi_id' => $this->anggota_details->hobi_id,
+            // 'hobi_id' => $this->anggota_details->hobi_id,
+            'hobi_id' => $this->anggota_details->recordHobi->pluck('id')->toArray(),
             'aktifitas_pelayanan' => $this->anggota_details->aktifitas_pelayanan,
             'memiliki_bpjs_asuransi' => $this->anggota_details->memiliki_bpjs_asuransi,
-            'penyakit_id' => $this->anggota_details->penyakit_id,
+            // 'penyakit_id' => $this->anggota_details->penyakit_id,
+            'penyakit_id' => $this->anggota_details->recordPenyakit->pluck('id')->toArray(),
             'domisili_alamat' => $this->anggota_details->domisili_alamat,
             'nomor_wa' => $this->anggota_details->nomor_wa,
             'is_wafat' => $this->anggota_details->is_wafat,
             'tgl_wafat' => $this->anggota_details->tgl_wafat,
+            'status_anggota_id' => $this->anggota_details->status_anggota_id,
         ]);
     }
 
@@ -133,14 +142,19 @@ class Anggota extends Component
             'tgl_babtis' => 'required|date',
             'tempat_sidi_id' => 'required',
             'tgl_sidi' => 'required|date',
-            'hobi_id' => 'required',
+            // 'hobi_id' => 'required',
+            'hobi_id' => 'nullable|array',
+            'hobi_id.*' => 'exists:hobis,id',
             'aktifitas_pelayanan' => 'required',
             'memiliki_bpjs_asuransi' => 'required|in:1,2',
-            'penyakit_id' => 'required',
+            // 'penyakit_id' => 'required',
+            'penyakit_id' => 'required|array',
+            'penyakit_id.*' => 'exists:penyakits,id',
             'domisili_alamat' => 'required|in:1,2',
             'nomor_wa' => 'string|max:12',
-            'is_wafat' => 'in:1,0|nullable',
+            // 'is_wafat' => 'in:1,0|nullable',
             'tgl_wafat' => 'date|nullable',
+            'status_anggota_id' => 'required'
         ]);
 
 
@@ -148,8 +162,9 @@ class Anggota extends Component
             'name' => $this->name,
             'email' => $this->name,
         ]);
-
-        KeluargaAnggota::find($this->anggota_details->id)->update([
+        $keluarga_anggota = KeluargaAnggota::find($this->anggota_details->id); 
+        $keluarga_anggota->update([
+        // $keluarga_anggota = KeluargaAnggota::find($this->anggota_details->id)->update([
             'keluarga_id' => $this->keluarga_id,
             'name' => $this->name,
             'jns_kelamin' => $this->jns_kelamin,
@@ -165,16 +180,19 @@ class Anggota extends Component
             'tgl_babtis' => $this->tgl_babtis,
             'tempat_sidi_id' => $this->tempat_sidi_id,
             'tgl_sidi' => $this->tgl_sidi,
-            'hobi_id' => $this->hobi_id,
+            // 'hobi_id' => $this->hobi_id,
             'aktifitas_pelayanan' => $this->aktifitas_pelayanan,
             'memiliki_bpjs_asuransi' => $this->memiliki_bpjs_asuransi,
-            'penyakit_id' => $this->penyakit_id,
+            // 'penyakit_id' => $this->penyakit_id,
             'domisili_alamat' => $this->domisili_alamat,
             'nomor_wa' => $this->nomor_wa,
-            'is_wafat' => $this->is_wafat ?? '0',
+            // 'is_wafat' => $this->is_wafat ?? '0',
             'tgl_wafat' => $this->tgl_wafat,
+            'status_anggota_id' => $this->status_anggota_id,
         ]);
 
+        $keluarga_anggota->recordHobi()->sync($this->hobi_id);
+        $keluarga_anggota->recordPenyakit()->sync($this->penyakit_id);
         $this->reset();
         Toaster::success('Anggota Keluarga updated successfully!');
         // return redirect()->route('anggota.index');

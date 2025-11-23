@@ -9,8 +9,8 @@ class Penyakit extends Model
 {
     protected $fillable = ['name'];
 
-    public function keluarga(): HasMany
+    public function keluargaAnggota(): HasMany
     {
-        return $this->hasMany(Keluarga::class, 'penyakit_id');
+        return $this->hasMany(KeluargaAnggota::class, 'penyakit_id');
     }
 }

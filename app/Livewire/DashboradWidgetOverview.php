@@ -25,6 +25,7 @@ class DashboradWidgetOverview extends Component
     public $totalKeluargaAnggotas;
     public $totalJnsKelamin;
     public $generasiJemaat;
+    public $kelompokUsia;
 
 
     public function mount()
@@ -93,11 +94,21 @@ class DashboradWidgetOverview extends Component
             'Gen Z (1995 - 2010)' => 2010,
             'Gen Alpha (2011 - sekarang)' => 2050,
         ];
+       
+
+        $rangesKelompokUsias = [
+            'Anak - anak (< 13 Tahun)' => 12,
+            'Remaja (13 - 17 Tahun)' => 17,
+            'Pemuda (18 - 30 Tahun)' => 30,
+            'Dewasa (31 - 60 Tahun)' => 60,
+            // 'Lansia (> 60 Tahun)' => 150,
+        ];
+          
 
         $query = KeluargaAnggota::select("tgl_lahir")
             ->whereNotNull("tgl_lahir")
             ->whereNull('deleted_at')
-            ->where('is_wafat', '0');
+            ->whereIn('status_anggota_id', ['1', '2', '3', '4']); // status
 
         // Filter jika user adalah majelis
         if (auth()->user()->role === 'majelis') {
@@ -114,6 +125,26 @@ class DashboradWidgetOverview extends Component
                         $anggota->range = $key;
                         break;
                     }
+                }
+                return $anggota;
+            })
+            ->mapToGroups(function ($anggota) {
+                return [$anggota->range => $anggota];
+            })
+            ->map(fn($group) => count($group));
+
+        $this->kelompokUsia = $query->get()
+        ->map(function ($anggota) use ($rangesKelompokUsias) {
+                $tanggalLahir = Carbon::parse($anggota->tgl_lahir);
+                $usia = $tanggalLahir->diffInYears(Carbon::now()); // Menghitung perbedaan tahun (usia)
+                foreach ($rangesKelompokUsias as $key => $breakpoint) {
+                    if ($usia <= $breakpoint) {
+                        $anggota->range = $key;
+                        break;
+                    }
+                }
+                if (!isset($anggota->range)) {
+                    $anggota->range = 'Lansia (> 60 Tahun)'; 
                 }
                 return $anggota;
             })

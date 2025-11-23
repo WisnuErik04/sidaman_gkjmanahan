@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class KeluargaAnggota extends Model
 {
@@ -36,6 +37,7 @@ class KeluargaAnggota extends Model
                 'nomor_wa',
                 'is_wafat',
                 'tgl_wafat',
+                'status_anggota_id',
     ];
     
     protected $with = [
@@ -51,6 +53,9 @@ class KeluargaAnggota extends Model
         'tempatSidi',
         'hobi',
         'penyakit',
+        'recordPenyakit',
+        'recordHobi',
+        'status',
     ];
 
     public function keluarga(): BelongsTo
@@ -100,5 +105,18 @@ class KeluargaAnggota extends Model
     public function penyakit(): BelongsTo
     {
         return $this->belongsTo(Penyakit::class);
+    }
+    public function recordPenyakit(): BelongsToMany
+    {
+        return $this->belongsToMany(Penyakit::class, 'keluarga_anggota_penyakits', 'keluarga_anggota_id', 'penyakit_id');
+    }
+    public function recordHobi(): BelongsToMany
+    {
+        return $this->belongsToMany(Hobi::class, 'keluarga_anggota_hobis', 'keluarga_anggota_id', 'hobi_id');
+    }
+    public function status(): BelongsTo
+    {
+        // return $this->belongsTo(StatusAnggota::class);
+        return $this->belongsTo(StatusAnggota::class, 'status_anggota_id');
     }
 }

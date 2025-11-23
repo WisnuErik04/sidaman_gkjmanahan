@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Carbon;
 use App\Models\KeluargaAnggota;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -58,11 +59,23 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
         if ($this->filters->searchTempatSidi) {
             $query->whereIn('tempat_sidi_id', $this->filters->searchTempatSidi);
         }
+        // if ($this->filters->searchHobi) {
+        //     $query->whereIn('hobi_id', $this->filters->searchHobi);
+        // }
+        // if ($this->filters->searchPenyakit) {
+        //     $query->whereIn('penyakit_id', $this->filters->searchPenyakit);
+        // }
         if ($this->filters->searchHobi) {
-            $query->whereIn('hobi_id', $this->filters->searchHobi);
+            $hobiIds = $this->filters->searchHobi;
+            $query->whereHas('recordHobi', function ($hobiQuery) use ($hobiIds) {
+                $hobiQuery->whereIn('hobi_id', $hobiIds);
+            });
         }
         if ($this->filters->searchPenyakit) {
-            $query->whereIn('penyakit_id', $this->filters->searchPenyakit);
+            $penyakitIds = $this->filters->searchPenyakit;
+            $query->whereHas('recordPenyakit', function ($penyakitQuery) use ($penyakitIds) {
+                $penyakitQuery->whereIn('penyakit_id', $penyakitIds);
+            });
         }
 
         // Filter berdasarkan alamat dan relasi wilayah
@@ -121,6 +134,42 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
             });
         }
 
+        if ($this->filters->searchKelompokUsia) {
+            $today = now();
+            $query->where(function ($q) use ($today) {
+                foreach ($this->filters->searchKelompokUsia as $kelUsiaId) {
+                    $kelompokUsia = $this->filters->kelompokUsias->firstWhere('id', $kelUsiaId);
+                    if ($kelompokUsia) {
+                        $minAge = $kelompokUsia->min_age;
+                        $maxAge = $kelompokUsia->max_age;
+
+                        $tahunSekarang = now()->year;
+                        // $tahunAkhir = $tahunSekarang - $minAge;
+                        // $tahunAwal = $tahunSekarang - $maxAge;
+                        // if ($kelompokUsia->max_age === null || $kelompokUsia->max_age === 0) {
+                        //     $tahunAwal = 1900; 
+                        // }
+
+                        // $q->orWhere(function ($sub) use ($tahunAwal, $tahunAkhir) {
+                        //     $sub->whereYear('tgl_lahir', '>=', $tahunAwal)
+                        //         ->whereYear('tgl_lahir', '<=', $tahunAkhir);
+                        // });
+                        $youngestBirthdate = $today->copy()->subYears($minAge);
+                        if ($kelompokUsia->max_age === null || $kelompokUsia->max_age === 0) {
+                            $oldestBirthdate = Carbon::parse('1900-01-01'); // Tahun sangat tua
+                        } else {
+                            $oldestBirthdate = $today->copy()->subYears($maxAge);
+                        }
+                        $q->orWhere(function ($sub) use ($oldestBirthdate, $youngestBirthdate) {
+
+                            $sub->where('tgl_lahir', '>=', $oldestBirthdate->toDateString())
+                                ->where('tgl_lahir', '<=', $youngestBirthdate->toDateString());
+                        });
+                    }
+                }
+            });
+        }
+
         if ($this->filters->searchTgl_babtis_awal) {
             $query->where('tgl_babtis', '>=', $this->filters->searchTgl_babtis_awal);
         }
@@ -149,23 +198,28 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
                 'Hubungan keluarga' => $item->hubunganKeluarga?->name ?? '-',
                 'Status perkawinan' => $item->perkawinan?->name ?? '-',
                 // 'Tanggal lahir' => $item->tgl_lahir,
-                'Tanggal lahir' => \Carbon\Carbon::parse($item->tgl_lahir)->format('d-m-Y'),
+                'Tanggal lahir' => \Carbon\Carbon::parse($item->tgl_lahir)->format('d-m-Y') ?? '',
                 'Golongan darah' => $item->golDarah?->name ?? '-',
                 'Ijasah terakhir' => $item->ijazah?->name ?? '-',
                 'Kegiatan/ Pekerjaan' => $item->pekerjaan?->name ?? '-',
                 'RPendapatan per bulan' => $item->pendapatan?->name ?? '-',
                 'Tempat baptis anak' => $item->tempatBabtis?->name ?? '-',
                 // 'Tanggal baptis anak' => $item->tgl_babtis,
-                'Tanggal baptis anak' => \Carbon\Carbon::parse($item->tgl_babtis)->format('d-m-Y'),
+                // 'Tanggal baptis anak' => \Carbon\Carbon::parse($item->tgl_babtis)->format('d-m-Y') ?? '',
+                'Tanggal baptis anak' => $item->tgl_babtis ? \Carbon\Carbon::parse($item->tgl_babtis)->format('d-m-Y') : '-',
                 'Tempat baptis dewasa/ Sidi' => $item->tempatSidi?->name ?? '-',
                 // 'Tanggal baptis dewasa/ Sidi' => $item->tgl_sidi,
-                'Tanggal baptis dewasa' => \Carbon\Carbon::parse($item->tgl_sidi)->format('d-m-Y'),
-                'Talenta/ Hobi' => $item->hobi?->name ?? '-',
+                // 'Tanggal baptis dewasa' => \Carbon\Carbon::parse($item->tgl_sidi)->format('d-m-Y') ?? '',
+                'Tanggal baptis dewasa' => $item->tgl_sidi ? \Carbon\Carbon::parse($item->tgl_sidi)->format('d-m-Y') : '-',
+                // 'Talenta/ Hobi' => $item->hobi?->name ?? '-',
+                'Talenta/ Hobi' => $item->recordHobi->pluck('name')->implode(', ') ?? '-',
                 'Aktivitas pelayanan yg aktif diikuti' => $item->aktifitas_pelayanan,
                 'Memiliki bpjs atau asuransi lainnya' => ($item->memiliki_bpjs_asuransi == '1') ? 'Ya' : 'Tidak',
-                'Apakah mempunyai penyakit kronis' => $item->penyakit?->name ?? '-',
+                // 'Apakah mempunyai penyakit kronis' => $item->penyakit?->name ?? '-',
+                'Apakah mempunyai penyakit kronis' => $item->recordPenyakit->pluck('name')->implode(', ') ?? '-',
                 'Domisili di alamat ini' => ($item->domisili_alamat == '1') ? 'Ya' : 'Tidak',
                 'Nomor WA' => $item->nomor_wa,
+                'Status' => $item->status?->name ?? '-',
             ];
         });
     }
@@ -195,6 +249,8 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
             'Apakah mempunyai penyakit kronis',
             'Domisili di alamat ini',
             'Nomor WA',
+            'Status',
+            // 'Kelompok Usia',
         ];
     }
 
@@ -223,6 +279,7 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
             'T' => 10,
             'U' => 10,
             'V' => 10,
+            'W' => 10,
         ];
     }
 }

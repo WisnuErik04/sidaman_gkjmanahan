@@ -10,8 +10,8 @@ class TempatBabtis extends Model
     protected $table = 'tempat_babtises';
     protected $fillable = ['name'];
 
-    public function keluarga(): HasMany
+    public function keluargaAnggota(): HasMany
     {
-        return $this->hasMany(Keluarga::class, 'tempat_babtis_id');
+        return $this->hasMany(KeluargaAnggota::class, 'tempat_babtis_id');
     }
 }

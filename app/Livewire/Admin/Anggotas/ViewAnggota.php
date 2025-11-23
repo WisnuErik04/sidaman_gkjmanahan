@@ -26,7 +26,7 @@ class ViewAnggota extends Component
     public $alamat_kab_kota = '';
     public $alamat_provinsi = '';
     public $jarak_rumah_id = '';
-    
+
     // public $bloks = [];
     public $provinsis = [];
     public $bloks = [];
@@ -35,23 +35,39 @@ class ViewAnggota extends Component
     // public $alamat_kab_kota = '';
     // public $alamat_kecamatan = '';
     // public $alamat_desa_kelurahan = '';
-    
-    public function mount($id){
+
+    public function mount($id)
+    {
         $this->provinsis = Wilayah::whereRaw('CHAR_LENGTH(kode) = 2')->orderBy('name', 'ASC')->get();
         $this->bloks = Blok::all();
         $this->jarakRumahs = JarakRumah::all();
-        
+
         $this->anggotas = KeluargaAnggota::find($id);
         $this->keluarga_details = Keluarga::find($this->anggotas->keluarga_id);
         if (auth()->user()->role === 'majelis' && $this->keluarga_details->blok_id !== auth()->user()->blok_id) {
             return redirect()->route('anggota.index');
         };
-        $this->anggotas = KeluargaAnggota::where('keluarga_id', $this->anggotas->keluarga_id)
+        $this->anggotas = KeluargaAnggota::with([
+            'status',
+            'hubunganKeluarga',
+            'perkawinan',
+            'golDarah',
+            'ijazah',
+            'pekerjaan',
+            'pendapatan',
+            'tempatBabtis',
+            'tempatSidi',
+            // 'hobi',
+            // 'penyakit',
+            'recordPenyakit',
+            'recordHobi',
+        ])->where('keluarga_id', $this->anggotas->keluarga_id)
             ->orderBy('hubungan_keluarga_id')->orderBy('tgl_lahir')->get();
         $this->loadEdit();
     }
 
-    public function loadEdit(){
+    public function loadEdit()
+    {
         $this->fill([
             'blok_id' => $this->keluarga_details->blok_id,
             'name' => $this->keluarga_details->name,
@@ -116,10 +132,9 @@ class ViewAnggota extends Component
         $desaKelurahans = $this->alamat_kecamatan
             ? Wilayah::whereRaw('CHAR_LENGTH(kode) = 13')->where('kode', 'like', $this->alamat_kecamatan . '.%')->orderBy('name', 'ASC')->get()
             : collect();
-            $this->dispatch('reinit-hsselect'); // 🔥 Dispatch event ke JS
+        $this->dispatch('reinit-hsselect'); // 🔥 Dispatch event ke JS
 
         return view('livewire.admin.anggotas.view-anggota', compact('kabupatenKotas', 'kecamatans', 'desaKelurahans'));
         // return view('livewire.admin.keluargas.view-keluarga', compact('bloks', 'jarakRumahs', 'kabupatenKotas', 'kecamatans', 'desaKelurahans'));
     }
-
 }

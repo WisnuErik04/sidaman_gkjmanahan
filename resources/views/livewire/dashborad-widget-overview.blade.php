@@ -20,6 +20,11 @@
                 <h3 class="text-lg font-bold text-black mb-4">Distribusi Generasi Jemaat</h3>
                 <canvas id="generationChart"></canvas>
             </div>
+            
+            {{-- Donut 3: Kelompok Usia --}}
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold text-black mb-4">Distribusi Kelompok Usia Jemaat</h3>
+                <canvas id="kelompokUsiaChart"></canvas>
         </div>
     @endif
 
@@ -58,6 +63,32 @@
                     labels: Object.keys(genData),
                     datasets: [{
                         data: Object.values(genData),
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                            '#9966FF', '#FF9F40'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Donut Chart: Kelompok Usia
+            var genCtx = document.getElementById('kelompokUsiaChart').getContext('2d');
+            var kelUsiaData = @json($kelompokUsia);
+            new Chart(genCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(kelUsiaData),
+                    datasets: [{
+                        data: Object.values(kelUsiaData),
                         backgroundColor: [
                             '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
                             '#9966FF', '#FF9F40'

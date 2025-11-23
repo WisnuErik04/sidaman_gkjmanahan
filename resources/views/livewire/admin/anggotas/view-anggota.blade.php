@@ -19,7 +19,7 @@
                 <div>
                     <div class="inline-flex gap-x-2">
                         <a class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                            href="{{ route('anggota.index') }}" > View all
+                            href="{{ route('anggota.index') }}"> View all
                         </a>
                     </div>
                 </div>
@@ -268,7 +268,8 @@
         </div>
         <!-- End Card -->
 
-        <div class="mt-4 p-4 relative bg-white border border-gray-200 rounded-xl md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
+        <div
+            class="mt-4 p-4 relative bg-white border border-gray-200 rounded-xl md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
             <!-- Header -->
             <div
                 class="mb-2 pb-2 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
@@ -279,7 +280,7 @@
                 </div>
 
             </div>
-         
+
             <div class="flex flex-col mb-4 sm:mb-8">
                 <div class="-m-1.5 overflow-x-auto">
                     <div class="p-1.5 min-w-full inline-block align-middle">
@@ -292,7 +293,8 @@
                                     <tr>
                                         <th scope="col"
                                             class="px-6 py-3 text-start border-s border-gray-200 dark:border-neutral-700">
-                                            <span class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
+                                            <span
+                                                class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
                                                 Nama
                                             </span>
                                         </th>
@@ -358,7 +360,8 @@
 
                                 <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                                     @forelse ($anggotas as $anggota)
-                                        <tr :key="{{ $anggota->id }}" class=" {{ $anggota->is_wafat == '1' ? 'bg-red-50 dark:bg-red-100' : '' }}">
+                                        <tr :key="{{ $anggota->id }}"
+                                            class=" {{ $anggota->is_wafat == '1' ? 'bg-red-50 dark:bg-red-100' : '' }}">
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
@@ -393,7 +396,7 @@
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_lahir }}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_lahir ? \Carbon\Carbon::parse($anggota->tgl_lahir)->format('d-m-Y') : '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
@@ -445,7 +448,8 @@
         </div>
         <!-- End Card -->
 
-        <div class="mt-4 p-4 relative bg-white border border-gray-200 rounded-xl md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
+        <div
+            class="mt-4 p-4 relative bg-white border border-gray-200 rounded-xl md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
             <!-- Header -->
             <div
                 class="mb-2 pb-2 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
@@ -513,7 +517,7 @@
                                         <th scope="col" class="px-6 py-3 text-start">
                                             <span
                                                 class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
-                                                Apakah Memiliki BPJS atau Asuransi  lainnya
+                                                Apakah Memiliki BPJS atau Asuransi lainnya
                                             </span>
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-start">
@@ -534,85 +538,110 @@
                                                 Nomor WA
                                             </span>
                                         </th>
+                                        <th scope="col" class="px-6 py-3 text-start">
+                                            <span
+                                                class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
+                                                Status
+                                            </span>
+                                        </th>
+
                                     </tr>
                                 </thead>
 
                                 <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                                     @forelse ($anggotas as $anggota)
-                                        <tr :key="{{ $anggota->id }}" class=" {{ $anggota->is_wafat == '1' ? 'bg-red-50 dark:bg-red-100' : '' }}">
+                                        <tr :key="{{ $anggota->id }}"
+                                            class=" {{ $anggota->is_wafat == '1' ? 'bg-red-50 dark:bg-red-100' : '' }}">
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="font-semibold text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tempatBabtis->name ?? '-'}}
+                                                        class="font-semibold text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tempatBabtis->name ?? '-' }}
                                                     </span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
-                                                    <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_babtis ?? '-'}}</span>
+                                                    <span {{-- class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_babtis?->format('d-m-Y') ?? '-'}}</span> --}}
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_babtis ? \Carbon\Carbon::parse($anggota->tgl_babtis)->format('d-m-Y') : '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tempatSidi->name ?? '-'}}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tempatSidi->name ?? '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_sidi ?? '-'}}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->tgl_sidi ? \Carbon\Carbon::parse($anggota->tgl_sidi)->format('d-m-Y') : '-' }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="h-px w-auto whitespace-nowrap">
+                                                <div class="px-6 py-2">
+                                                    <span {{-- class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->recordHobi->hobi->name ?? '-'}}</span> --}}
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->recordHobi->pluck('name')->implode(', ') ?? '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->hobi->name ?? '-'}}</span>
-                                                </div>
-                                            </td>
-                                            <td class="h-px w-auto whitespace-nowrap">
-                                                <div class="px-6 py-2">
-                                                    <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->aktifitas_pelayanan ?? '-'}}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->aktifitas_pelayanan ?? '-' }}</span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     @if ($anggota->memiliki_bpjs_asuransi == '2')
-                                                        <span class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-green-200">
+                                                        <span
+                                                            class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-green-200">
                                                             Tidak
-                                                        </span>    
+                                                        </span>
                                                     @else
-                                                        <span class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                                                        <span
+                                                            class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
                                                             Ya
-                                                        </span>                    
+                                                        </span>
                                                     @endif
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
-                                                    <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->penyakit->name }}</span>
+                                                    <span {{-- class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->penyakit->name }}</span> --}}
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->recordPenyakit->pluck('name')->implode(', ') ?? '-' }}</span>
+
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     @if ($anggota->domisili_alamat == '2')
-                                                        <span class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-green-200">
+                                                        <span
+                                                            class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-green-200">
                                                             Tidak
-                                                        </span>    
+                                                        </span>
                                                     @else
-                                                        <span class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                                                        <span
+                                                            class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
                                                             Ya
-                                                        </span>                    
+                                                        </span>
                                                     @endif
                                                 </div>
                                             </td>
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
-                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->nomor_wa ?? '-'}}</span>
+                                                        class="text-sm text-gray-800 dark:text-neutral-200">{{ $anggota->nomor_wa ?? '-' }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="h-px w-auto whitespace-nowrap">
+                                                <div class="px-6 py-2">
+                                                    <span
+                                                        class="font-semibold text-sm text-gray-800 dark:text-neutral-200">
+                                                        {{ $anggota->status->name ?? '-' }}
+
+                                                        @if (($anggota->status->name ?? '') === 'Meninggal')
+                                                            {{ $anggota->tgl_wafat ? '('.\Carbon\Carbon::parse($anggota->tgl_wafat)->format('d-m-Y') .')': '-' }}
+                                                        @endif
+                                                    </span>
                                                 </div>
                                             </td>
 

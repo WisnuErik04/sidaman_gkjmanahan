@@ -58,9 +58,9 @@ class KeluargaImport implements ToCollection, WithHeadingRow
                     'Desa' => $desa ? 'OK' : 'Tidak ditemukan',
                     'Jarak' => $jarak_rumah ? 'OK' : 'Tidak ditemukan',
                 ];
+                $rowNumber++;
                 continue;
             }
-            $rowNumber++;
             // Cek apakah data keluarga sudah ada
             $existingKeluarga = Keluarga::where('name', 'like', '%' . $data['name'] . '%')
                 ->where('blok_id', $blok->id)

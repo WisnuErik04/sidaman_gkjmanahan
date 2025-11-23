@@ -15,6 +15,7 @@ use App\Models\Pendapatan;
 use App\Models\Perkawinan;
 use App\Models\TempatSidi;
 use App\Models\TempatBabtis;
+use App\Models\StatusAnggota;
 use Livewire\Attributes\Title;
 use Masmerise\Toaster\Toaster;
 use App\Models\KeluargaAnggota;
@@ -42,15 +43,18 @@ class AddAnggota extends Component
         $tgl_babtis,
         $tempat_sidi_id,
         $tgl_sidi,
-        $hobi_id,
+        // $hobi_id,
         $aktifitas_pelayanan,
         $memiliki_bpjs_asuransi,
-        $penyakit_id,
+        // $penyakit_id,
         $domisili_alamat,
         $nomor_wa,
-        $is_wafat,
-        $tgl_wafat;
-
+        // $is_wafat,
+        $tgl_wafat,
+        $status_anggota_id;
+    public $hobi_id = []; 
+    public $penyakit_id = [];
+    
     public $keluargas = [];
     public $hubunganKeluargas = [];
     public $perkawinans = [];
@@ -62,6 +66,7 @@ class AddAnggota extends Component
     public $tempatSidis = [];
     public $hobis = [];
     public $penyakits = [];
+    public $statuses = [];
 
     public function mount()
     {
@@ -79,11 +84,13 @@ class AddAnggota extends Component
         $this->tempatSidis = TempatSidi::all();
         $this->hobis = Hobi::all();
         $this->penyakits = Penyakit::all();
+        $this->statuses = StatusAnggota::all();
         
     }
 
     public function saveAnggota()
     {
+
         $this->validate([
             'keluarga_id' => 'required',
             'user_id' => 'nullable',
@@ -110,17 +117,20 @@ class AddAnggota extends Component
             'tgl_babtis' => 'nullable|date',
             'tempat_sidi_id' => 'nullable',
             'tgl_sidi' => 'nullable|date',
-            'hobi_id' => 'nullable',
+            'hobi_id' => 'nullable|array',
+            'hobi_id.*' => 'exists:hobis,id',
             'aktifitas_pelayanan' => 'nullable',
             'memiliki_bpjs_asuransi' => 'required|in:1,2',
-            'penyakit_id' => 'required',
+            'penyakit_id' => 'required|array',
+            'penyakit_id.*' => 'exists:penyakits,id',
             'domisili_alamat' => 'required|in:1,2',
             // 'nomor_wa' => 'string|max:12',
-            'nomor_wa' => 'nullable|string|max:12',
-            'is_wafat' => 'in:1,0|nullable',
+            'nomor_wa' => 'nullable|string|max:15',
+            // 'is_wafat' => 'in:1,0|nullable',
             'tgl_wafat' => 'date|nullable',
+            'status_anggota_id' => 'required'
         ]);
-
+// dd('ad');
      
             $user = User::create([
                 'name' => $this->name,
@@ -129,7 +139,7 @@ class AddAnggota extends Component
                 'role' => 'warga',
             ]);
             
-            KeluargaAnggota::create([
+            $keluarga_anggota = KeluargaAnggota::create([
                 'keluarga_id' => $this->keluarga_id,
                 'user_id' => $user->id,
                 'name' => $this->name,
@@ -146,16 +156,26 @@ class AddAnggota extends Component
                 'tgl_babtis' => $this->tgl_babtis,
                 'tempat_sidi_id' => $this->tempat_sidi_id,
                 'tgl_sidi' => $this->tgl_sidi,
-                'hobi_id' => $this->hobi_id,
+                // 'hobi_id' => $this->hobi_id,
                 'aktifitas_pelayanan' => $this->aktifitas_pelayanan,
                 'memiliki_bpjs_asuransi' => $this->memiliki_bpjs_asuransi,
-                'penyakit_id' => $this->penyakit_id,
+                // 'penyakit_id' => $this->penyakit_id,
                 'domisili_alamat' => $this->domisili_alamat,
                 'nomor_wa' => $this->nomor_wa,
-                'is_wafat' => $this->is_wafat ?? '0',
+                // 'is_wafat' => $this->is_wafat ?? '0',
                 'tgl_wafat' => $this->tgl_wafat,
+                'status_anggota_id' => $this->status_anggota_id,
             ]);
-       
+            // dd($keluarga_anggota->recordHobi()->sync($this->hobi_id));
+            // dd($keluarga_anggota->recordPenyakit()->sync($this->penyakit_id));
+            if (!empty($this->hobi_id)) {
+                $keluarga_anggota->recordHobi()->sync($this->hobi_id);
+            }
+
+            if (!empty($this->penyakit_id)) {
+                $keluarga_anggota->recordPenyakit()->sync($this->penyakit_id);
+            }
+
         $this->reset();
         Toaster::success('Anggota Keluarga added successfully!');
         // return redirect()->route('anggota.index');
