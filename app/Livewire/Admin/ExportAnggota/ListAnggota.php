@@ -281,6 +281,10 @@ class ListAnggota extends Component
             });
         }
 
+        if ($this->searchStatus) {
+            $query->whereIn('status_anggota_id', $this->searchStatus);
+        }
+
         if ($this->searchBlok) {
             $query->whereHas('keluarga.blok', function ($q) {
                 $q->whereIn('id', $this->searchBlok);

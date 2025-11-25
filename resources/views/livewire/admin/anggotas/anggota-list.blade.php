@@ -176,7 +176,7 @@
                            
                                     @forelse ($anggotas as $anggota)
                                         <tr :key="{{ $anggota->id }}"
-                                            class=" {{ $anggota->is_wafat == '1' ? 'bg-red-50 dark:bg-red-100' : '' }}">
+                                            class=" {{ $anggota->status_anggota_id == '6' ? 'bg-red-50 dark:bg-red-100' : '' }}">
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span

@@ -140,23 +140,29 @@ class JemaatExport implements FromCollection, WithHeadings, WithColumnWidths
                 'Hubungan keluarga' => $item->hubunganKeluarga?->name ?? '-',
                 'Status perkawinan' => $item->perkawinan?->name ?? '-',
                 // 'Tanggal lahir' => $item->tgl_lahir,
-                'Tanggal lahir' => \Carbon\Carbon::parse($item->tgl_lahir)->format('d-m-Y'),
+                // 'Tanggal lahir' => \Carbon\Carbon::parse($item->tgl_lahir)->format('d-m-Y'),
+                'Tanggal lahir' => \Carbon\Carbon::parse($item->tgl_lahir)->format('d-m-Y') ?? '',
                 'Golongan darah' => $item->golDarah?->name ?? '-',
                 'Ijasah terakhir' => $item->ijazah?->name ?? '-',
                 'Kegiatan/ Pekerjaan' => $item->pekerjaan?->name ?? '-',
                 'RPendapatan per bulan' => $item->pendapatan?->name ?? '-',
                 'Tempat baptis anak' => $item->tempatBabtis?->name ?? '-',
                 // 'Tanggal baptis anak' => $item->tgl_babtis,
-                'Tanggal baptis anak' => \Carbon\Carbon::parse($item->tgl_babtis)->format('d-m-Y'),
+                // 'Tanggal baptis anak' => \Carbon\Carbon::parse($item->tgl_babtis)->format('d-m-Y'),
+                'Tanggal baptis anak' => $item->tgl_babtis ? \Carbon\Carbon::parse($item->tgl_babtis)->format('d-m-Y') : '-',
                 'Tempat baptis dewasa/ Sidi' => $item->tempatSidi?->name ?? '-',
                 // 'Tanggal baptis dewasa/ Sidi' => $item->tgl_sidi,
-                'Tanggal baptis dewasa' => \Carbon\Carbon::parse($item->tgl_sidi)->format('d-m-Y'),
-                'Talenta/ Hobi' => $item->hobi?->name ?? '-',
+                // 'Tanggal baptis dewasa' => \Carbon\Carbon::parse($item->tgl_sidi)->format('d-m-Y'),
+                'Tanggal baptis dewasa' => $item->tgl_sidi ? \Carbon\Carbon::parse($item->tgl_sidi)->format('d-m-Y') : '-',
+                // 'Talenta/ Hobi' => $item->hobi?->name ?? '-',
+                'Talenta/ Hobi' => $item->recordHobi->pluck('name')->implode(', ') ?? '-',
                 'Aktivitas pelayanan yg aktif diikuti' => $item->aktifitas_pelayanan,
                 'Memiliki bpjs atau asuransi lainnya' => ($item->memiliki_bpjs_asuransi == '1') ? 'Ya' : 'Tidak',
-                'Apakah mempunyai penyakit kronis' => $item->penyakit?->name ?? '-',
+                // 'Apakah mempunyai penyakit kronis' => $item->penyakit?->name ?? '-',
+                'Apakah mempunyai penyakit kronis' => $item->recordPenyakit->pluck('name')->implode(', ') ?? '-',
                 'Domisili di alamat ini' => ($item->domisili_alamat == '1') ? 'Ya' : 'Tidak',
                 'Nomor WA' => $item->nomor_wa,
+                'Status' => $item->status?->name ?? '-',
             ];
         });
     }
@@ -198,6 +204,7 @@ class JemaatExport implements FromCollection, WithHeadings, WithColumnWidths
             'Apakah mempunyai penyakit kronis',
             'Domisili di alamat ini',
             'Nomor WA',
+            'Status',
         ];
     }
 
@@ -236,6 +243,7 @@ class JemaatExport implements FromCollection, WithHeadings, WithColumnWidths
             'AD' => 10,
             'AE' => 10,
             'AF' => 10,
+            'AG' => 10,
         ];
     }
 }

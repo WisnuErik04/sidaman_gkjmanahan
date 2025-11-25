@@ -101,6 +101,7 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
                 $q->whereIn('id', $this->filters->searchBlok);
             });
         }
+
         if ($this->filters->searchTgl_ulang_tahun_awal && $this->filters->searchTgl_ulang_tahun_akhir) {
             $awal = date('m-d', strtotime($this->filters->searchTgl_ulang_tahun_awal));
             $akhir = date('m-d', strtotime($this->filters->searchTgl_ulang_tahun_akhir));
@@ -182,7 +183,9 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
         if ($this->filters->searchTgl_sidi_akhir) {
             $query->where('tgl_sidi', '<=', $this->filters->searchTgl_sidi_akhir);
         }
-
+        if ($this->filters->searchStatus) {
+            $query->whereIn('status_anggota_id', $this->filters->searchStatus);
+        }
         // Sorting
         if ($this->filters->sortField1 === 'name') {
             $query->orderBy('name', $this->filters->sortDirection1);
