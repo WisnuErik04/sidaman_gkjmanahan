@@ -91,7 +91,7 @@ class ListAnggota extends Component
         $this->hobis = Hobi::all();
         $this->penyakits = Penyakit::all();
         $this->statuses = StatusAnggota::all();
-        $this->searchStatus = ['1', '2', '3', '4'];
+        $this->searchStatus = ['1', '3', '4'];
         // $this->generasis = [
         //     0 => [
         //         'id' => 1,
