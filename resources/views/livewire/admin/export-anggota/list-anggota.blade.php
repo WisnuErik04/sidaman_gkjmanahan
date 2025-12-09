@@ -152,6 +152,13 @@
                                             </span>
                                         </th>
 
+                                        <th scope="col" class="px-6 py-3 text-start">
+                                            <span
+                                                class="text-xs font-semibold uppercase text-gray-800 dark:text-neutral-200">
+                                                Status
+                                            </span>
+                                        </th>
+
                                     </tr>
                                 </thead>
 
@@ -185,6 +192,13 @@
                                                     <span class="text-sm text-gray-800 dark:text-neutral-200">
                                                         {{ \Carbon\Carbon::parse($anggota->tgl_lahir)->translatedFormat('d F Y') }}
                                                     </span>
+                                                </div>
+                                            </td>
+                                            
+                                            <td class="h-px w-auto whitespace-nowrap">
+                                                <div class="px-6 py-2">
+                                                    <span class="text-sm text-gray-800 dark:text-neutral-200">
+                                                        {{ $anggota->status->name ?? '-' }} </span>
                                                 </div>
                                             </td>
                                         </tr>
