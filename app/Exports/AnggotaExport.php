@@ -192,6 +192,8 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
         }
 
         return $query->get()->map(function ($item) {
+            $tanggalLahir = \Carbon\Carbon::parse($item->tgl_lahir);
+            $usia = $tanggalLahir->diffInYears(\Carbon\Carbon::now());
             return [
                 'Keluarga' => $item->keluarga?->name ?? '-',
                 'Blok' => $item->keluarga?->blok?->name ?? '-',
@@ -223,6 +225,7 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
                 'Domisili di alamat ini' => ($item->domisili_alamat == '1') ? 'Ya' : 'Tidak',
                 'Nomor WA' => $item->nomor_wa,
                 'Status' => $item->status?->name ?? '-',
+                'usia' => $usia ?? '-',
             ];
         });
     }
@@ -253,7 +256,7 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
             'Domisili di alamat ini',
             'Nomor WA',
             'Status',
-            // 'Kelompok Usia',
+            'Kelompok Usia',
         ];
     }
 
