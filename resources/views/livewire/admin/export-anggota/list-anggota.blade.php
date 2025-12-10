@@ -198,9 +198,13 @@
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span class="text-sm text-gray-800 dark:text-neutral-200">
-                                                        {{ $anggota->status->name ?? '-' }} 
-                                                        {{ $tanggalLahir = Carbon::parse($anggota->tgl_lahir);
-                $usia = $tanggalLahir->diffInYears(Carbon::now()); }}
+                                                        {{ $anggota->status->name ?? '-' }}
+                                                        @php
+                                                            $tanggalLahir = \Carbon\Carbon::parse($anggota->tgl_lahir);
+                $usia = $tanggalLahir->diffInYears(\Carbon\Carbon::now()); 
+                                                            
+                                                        @endphp
+                                                        {{ $usia }}
                                                         </span>
                                                 </div>
                                             </td>
