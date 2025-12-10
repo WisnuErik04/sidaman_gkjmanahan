@@ -142,9 +142,9 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
                     $kelompokUsia = $this->filters->kelompokUsias->firstWhere('id', $kelUsiaId);
                     if ($kelompokUsia) {
                         $minAge = $kelompokUsia->min_age;
-                        $maxAge = $kelompokUsia->max_age;
+                        $maxAge = $kelompokUsia->max_age + 1; // Tambah 1 supaya inklusif
 
-                        $tahunSekarang = now()->year;
+                        // $tahunSekarang = now()->year;
                         // $tahunAkhir = $tahunSekarang - $minAge;
                         // $tahunAwal = $tahunSekarang - $maxAge;
                         // if ($kelompokUsia->max_age === null || $kelompokUsia->max_age === 0) {
@@ -159,7 +159,7 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
                         if ($kelompokUsia->max_age === null || $kelompokUsia->max_age === 0) {
                             $oldestBirthdate = Carbon::parse('1900-01-01'); // Tahun sangat tua
                         } else {
-                            $oldestBirthdate = $today->copy()->subYears($maxAge);
+                            $oldestBirthdate = $today->copy()->subYears($maxAge)->subDay(); // agar inklusif
                         }
                         $q->orWhere(function ($sub) use ($oldestBirthdate, $youngestBirthdate) {
 
