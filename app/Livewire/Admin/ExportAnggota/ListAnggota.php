@@ -173,26 +173,26 @@ class ListAnggota extends Component
         $this->kelompokUsias = collect([
             (object)[
                 'id' => 1,
-                'name' => 'Anak - anak (< 13 Tahun)',
+                'name' => 'Anak - anak (0 - 12 Tahun)',
                 "min_age" => 0,
                 "max_age" => 12,
             ],
             (object)[
                 'id' => 2,
-                'name' => 'Remaja (13 - 17 Tahun)',
+                'name' => 'Pra Remaja (13 - 17 Tahun)',
                 "min_age" => 13,
                 "max_age" => 17,
             ],
             (object)[
                 'id' => 3,
-                'name' => 'Pemuda (18 - 30 Tahun)',
+                'name' => 'Remaja (18 - 25 Tahun)',
                 "min_age" => 18,
-                "max_age" => 30,
+                "max_age" => 25,
             ],
             (object)[
                 'id' => 4,
-                'name' => 'Dewasa (31 - 60 Tahun)',
-                "min_age" => 31,
+                'name' => 'Dewasa (26 - 60 Tahun)',
+                "min_age" => 26,
                 "max_age" => 60,
             ],
             (object)[
