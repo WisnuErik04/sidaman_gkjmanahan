@@ -348,7 +348,7 @@ class ListAnggota extends Component
                             $oldestBirthdate = $today->copy()->subYears($maxAge)->subDay(); // agar inklusif
                             // $oldestBirthdate->subDay();
                         }
-                        dd($oldestBirthdate->toDateString(), $youngestBirthdate->toDateString());
+                        // dd($oldestBirthdate->toDateString(), $youngestBirthdate->toDateString());
                         $q->orWhere(function ($sub) use ($oldestBirthdate, $youngestBirthdate) {
 
                             $sub->where('tgl_lahir', '>=', $oldestBirthdate->toDateString())
