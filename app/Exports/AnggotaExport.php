@@ -159,7 +159,7 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
                         if ($kelompokUsia->max_age === null || $kelompokUsia->max_age === 0) {
                             $oldestBirthdate = Carbon::parse('1900-01-01'); // Tahun sangat tua
                         } else {
-                            $oldestBirthdate = $today->copy()->subYears($maxAge)->subDay(); // agar inklusif
+                            $oldestBirthdate = $today->copy()->subYears($maxAge)->addDay(); // agar inklusif
                         }
                         $q->orWhere(function ($sub) use ($oldestBirthdate, $youngestBirthdate) {
 
