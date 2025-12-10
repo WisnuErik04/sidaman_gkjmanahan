@@ -159,6 +159,7 @@ class DashboradWidgetOverview extends Component
                 return [$anggota->range => $anggota];
             })
             ->map(fn($group) => count($group));
+
     }
     public function render()
     {

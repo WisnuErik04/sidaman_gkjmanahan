@@ -339,26 +339,16 @@ class ListAnggota extends Component
                     $kelompokUsia = $this->kelompokUsias->firstWhere('id', $kelUsiaId);
                     if ($kelompokUsia) {
                         $minAge = $kelompokUsia->min_age;
-                        $maxAge = $kelompokUsia->max_age;
-
-                        // $tahunSekarang = now()->year;
-                        // $tahunAkhir = $tahunSekarang - $minAge;
-                        // $tahunAwal = $tahunSekarang - $maxAge;
-                        // if ($kelompokUsia->max_age === null || $kelompokUsia->max_age === 0) {
-                        //     $tahunAwal = 1900;
-                        // }
-                        // $q->orWhere(function ($sub) use ($tahunAwal, $tahunAkhir) {
-                        //     $sub->whereYear('tgl_lahir', '>=', $tahunAwal)
-                        //         ->whereYear('tgl_lahir', '<=', $tahunAkhir);
-                        // });
-
+                        $maxAge = $kelompokUsia->max_age + 1; // Tambah 1 supaya inklusif
 
                         $youngestBirthdate = $today->copy()->subYears($minAge);
                         if ($kelompokUsia->max_age === null || $kelompokUsia->max_age === 0) {
                             $oldestBirthdate = Carbon::parse('1900-01-01'); // Tahun sangat tua
                         } else {
-                            $oldestBirthdate = $today->copy()->subYears($maxAge);
+                            $oldestBirthdate = $today->copy()->subYears($maxAge)->subDay();
+                            // $oldestBirthdate->subDay();
                         }
+                        // dd($oldestBirthdate->toDateString(), $youngestBirthdate->toDateString());
                         $q->orWhere(function ($sub) use ($oldestBirthdate, $youngestBirthdate) {
 
                             $sub->where('tgl_lahir', '>=', $oldestBirthdate->toDateString())
