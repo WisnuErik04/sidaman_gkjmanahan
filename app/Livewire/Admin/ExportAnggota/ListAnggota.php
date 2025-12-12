@@ -179,13 +179,13 @@ class ListAnggota extends Component
             ],
             (object)[
                 'id' => 2,
-                'name' => 'Pra Remaja (13 - 17 Tahun)',
+                'name' => 'Remaja (13 - 17 Tahun)',
                 "min_age" => 13,
                 "max_age" => 17,
             ],
             (object)[
                 'id' => 3,
-                'name' => 'Remaja (18 - 25 Tahun)',
+                'name' => 'Pemuda (18 - 25 Tahun)',
                 "min_age" => 18,
                 "max_age" => 25,
             ],

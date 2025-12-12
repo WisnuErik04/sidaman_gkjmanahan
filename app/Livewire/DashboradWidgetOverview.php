@@ -102,8 +102,8 @@ class DashboradWidgetOverview extends Component
 
         $rangesKelompokUsias = [
             'Anak - anak (0 - 12 Tahun)' => 12.9999,
-            'Pra Remaja (13 - 17 Tahun)' => 17.9999,
-            'Remaja (18 - 25 Tahun)' => 25.9999, 
+            'Remaja (13 - 17 Tahun)' => 17.9999,
+            'Pemuda (18 - 25 Tahun)' => 25.9999, 
             'Dewasa (26 - 60 Tahun)' => 60.9999,
             // 'Remaja (13 - 17 Tahun)' => 17,
             // 'Pemuda (18 - 30 Tahun)' => 30,
