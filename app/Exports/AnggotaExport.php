@@ -77,6 +77,9 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
                 $penyakitQuery->whereIn('penyakit_id', $penyakitIds);
             });
         }
+        if ($this->filters->searchJenisKelamin) {
+            $query->whereIn('jns_kelamin', $this->filters->searchJenisKelamin);
+        }
 
         // Filter berdasarkan alamat dan relasi wilayah
         if ($this->filters->searchKeluarga) {

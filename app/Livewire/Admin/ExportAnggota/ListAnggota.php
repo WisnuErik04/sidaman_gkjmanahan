@@ -49,6 +49,7 @@ class ListAnggota extends Component
     public $searchTempatSidi = '';
     public $searchHobi = '';
     public $searchPenyakit = '';
+    public $searchJenisKelamin = '';
     public $searchTgl_babtis_awal = '';
     public $searchTgl_babtis_akhir = '';
     public $searchTgl_sidi_awal = '';
@@ -266,6 +267,9 @@ class ListAnggota extends Component
             $query->whereHas('recordPenyakit', function ($penyakitQuery) use ($penyakitIds) {
                 $penyakitQuery->whereIn('penyakit_id', $penyakitIds);
             });
+        }
+        if ($this->searchJenisKelamin) {
+            $query->whereIn('jns_kelamin', $this->searchJenisKelamin);
         }
         // if ($this->searchPenyakit) {
         //     $query->whereIn('penyakit_id', $this->searchPenyakit);
