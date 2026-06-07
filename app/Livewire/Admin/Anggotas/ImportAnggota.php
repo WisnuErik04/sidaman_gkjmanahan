@@ -13,7 +13,7 @@ use App\Models\KeluargaAnggota;
 use App\Models\KeluargaAnggotaDummy;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AnggotaTemplateExport;
-
+use App\Models\KeluargaAnggotaStatusRecord;
 
 #[Title('Import Anggota | Sidaman')]
 class ImportAnggota extends Component
@@ -87,7 +87,7 @@ class ImportAnggota extends Component
         foreach (KeluargaAnggotaDummy::where('user_id_input', auth()->user()->id)->get() as $dummy) {
             $dummy->tgl_babtis = ($dummy->tgl_babtis != '') ? $dummy->tgl_babtis : null;
             $dummy->tgl_sidi = ($dummy->tgl_sidi != '') ? $dummy->tgl_sidi : null;
-            $dummy->tgl_wafat = ($dummy->tgl_wafat != '') ? $dummy->tgl_wafat : null;
+            $dummy->tanggal_status = ($dummy->tanggal_status != '') ? $dummy->tanggal_status : null;
             if ($dummy->keluarga_anggota_id) {
                 // update
                 $keluarga_anggota = KeluargaAnggota::find($dummy->keluarga_anggota_id);
@@ -114,9 +114,14 @@ class ImportAnggota extends Component
                     'domisili_alamat' => $dummy->domisili_alamat,
                     'nomor_wa' => $dummy->nomor_wa,
                     // 'is_wafat' => $dummy->is_wafat,
-                    'tgl_wafat' => $dummy->tgl_wafat,
-                    'status_anggota_id' => $dummy->status_anggota_id,
+                    // 'tanggal_status' => $dummy->tanggal_status,
+                    // 'status_anggota_id' => $dummy->status_anggota_id,
                 ]);
+
+                //cari riwayat status berdasarkan id anggota dan status_id dari dummy
+                $riwayat = KeluargaAnggotaStatusRecord::where('keluarga_anggota_id', $dummy->keluarga_anggota_id)
+                    ->where('status_anggota_id', $dummy->status_anggota_id)
+                    ->first();
             } else {
                 // insert baru
                 $keluarga_anggota = KeluargaAnggota::create([
@@ -141,9 +146,9 @@ class ImportAnggota extends Component
                     // 'penyakit_id' => $dummy->penyakit_id,
                     'domisili_alamat' => $dummy->domisili_alamat,
                     'nomor_wa' => $dummy->nomor_wa,
-                    'is_wafat' => $dummy->is_wafat,
-                    'tgl_wafat' => $dummy->tgl_wafat,
-                    'status_anggota_id' => $dummy->status_anggota_id,
+                    // 'is_wafat' => $dummy->is_wafat,
+                    // 'tanggal_status' => $dummy->tanggal_status,
+                    // 'status_anggota_id' => $dummy->status_anggota_id,
                     // 'is_wafat' => '0',
                 ]);
             }
@@ -154,6 +159,28 @@ class ImportAnggota extends Component
             // STEP 3 — Sync penyakit (JSON → pivot)
             if (is_array($dummy->penyakit_id)) {
                 $keluarga_anggota->recordPenyakit()->sync($dummy->penyakit_id);
+            }
+            if ($dummy->status_anggota_id) {
+                if ($riwayat) {
+                    // Jika ID ada, berarti update record yang sudah ada
+                    KeluargaAnggotaStatusRecord::where('id', $riwayat->id)->update([
+                        'status_anggota_id' => $dummy->status_anggota_id,
+                        'tanggal_status'    => $dummy->tanggal_status,
+                    ]);
+                } else {
+                    // Jika ID null, buat data baru
+                    KeluargaAnggotaStatusRecord::create([
+                        'keluarga_anggota_id' => $dummy->keluarga_anggota_id ?? $keluarga_anggota->id,
+                        'status_anggota_id'   => $dummy->status_anggota_id,
+                        'tanggal_status'      => $dummy->tanggal_status,
+                    ]);
+                }
+                if ($dummy->status_anggota_id === 6) {
+                    $keluarga_anggota->update([
+                        'is_wafat' => '1',
+                        // 'tgl_wafat' => now(),
+                    ]);
+                }
             }
         }
         KeluargaAnggotaDummy::where('user_id_input', auth()->user()->id)->delete();

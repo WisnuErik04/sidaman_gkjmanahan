@@ -51,7 +51,7 @@ class ViewKeluarga extends Component
         $this->loadEdit($id);
 
         $this->anggotas = KeluargaAnggota::with([
-            'status',
+            // 'status',
             'hubunganKeluarga',
             'perkawinan',
             'golDarah',

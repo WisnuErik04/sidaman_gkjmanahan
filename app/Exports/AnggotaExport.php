@@ -186,9 +186,33 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
         if ($this->filters->searchTgl_sidi_akhir) {
             $query->where('tgl_sidi', '<=', $this->filters->searchTgl_sidi_akhir);
         }
-        if ($this->filters->searchStatus) {
-            $query->whereIn('status_anggota_id', $this->filters->searchStatus);
+        // if ($this->filters->searchStatus) {
+        //     $query->whereIn('status_anggota_id', $this->filters->searchStatus);
+        // }
+         if ($this->filters->searchJenisStatus == '2' && $this->filters->searchRiwayatStatus && $this->filters->searchRiwayatStatus != '--') {
+            $statusIds = (array) $this->filters->searchRiwayatStatus;
+            $query->whereHas('statusRecords', function ($statusQuery) use ($statusIds) {
+                $statusQuery->whereIn('status_anggota_id', $statusIds);
+                    if ($this->filters->search_riwayat_status_awal || $this->filters->search_riwayat_status_akhir) {
+                        if (!$this->filters->search_riwayat_status_awal) $this->filters->search_riwayat_status_awal = '1900-01-01';
+                        if (!$this->filters->search_riwayat_status_akhir) $this->filters->search_riwayat_status_akhir = now()->toDateString();
+
+                        $statusQuery->whereBetween('tanggal_status', [$this->filters->search_riwayat_status_awal, $this->filters->search_riwayat_status_akhir]);
+                    }
+            });
         }
+
+        if ($this->filters->searchJenisStatus == '1' && $this->filters->searchStatus) {
+            $statusIds = (array) $this->filters->searchStatus;
+            $query->whereHas('statusRecords', function ($statusQuery) use ($statusIds) {
+                $statusQuery->whereIn('status_anggota_id', $statusIds)->where('tanggal_status', function ($subQuery) {
+                    $subQuery->selectRaw('MAX(tanggal_status)')
+                        ->from('keluarga_anggota_status_records')
+                        ->whereColumn('keluarga_anggota_id', 'keluarga_anggotas.id');
+                });
+            });
+        }
+
         // Sorting
         if ($this->filters->sortField1 === 'name') {
             $query->orderBy('name', $this->filters->sortDirection1);
@@ -196,7 +220,7 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
 
         return $query->get()->map(function ($item) {
             $tanggalLahir = \Carbon\Carbon::parse($item->tgl_lahir);
-            $usia = $tanggalLahir->diffInYears(\Carbon\Carbon::now());
+            $usia = number_format($tanggalLahir->diffInYears(\Carbon\Carbon::now()), 1) . ' thn';
             return [
                 'Keluarga' => $item->keluarga?->name ?? '-',
                 'Blok' => $item->keluarga?->blok?->name ?? '-',
@@ -227,7 +251,8 @@ class AnggotaExport implements FromCollection, WithHeadings, WithColumnWidths
                 'Apakah mempunyai penyakit kronis' => $item->recordPenyakit->pluck('name')->implode(', ') ?? '-',
                 'Domisili di alamat ini' => ($item->domisili_alamat == '1') ? 'Ya' : 'Tidak',
                 'Nomor WA' => $item->nomor_wa,
-                'Status' => $item->status?->name ?? '-',
+                // 'Status' => $item->status?->name ?? '-',
+                'Status' => $item->latestStatusRecord?->statusAnggota?->name ?? '-',
                 'usia' => $usia ?? '-',
             ];
         });

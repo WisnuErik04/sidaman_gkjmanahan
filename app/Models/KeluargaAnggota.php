@@ -5,41 +5,42 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class KeluargaAnggota extends Model
 {
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
-                'keluarga_id',
-                'user_id',
-                'name',
-                'jns_kelamin',
-                'nomor_induk_gereja',
-                'hubungan_keluarga_id',
-                'perkawinan_id',
-                'tgl_lahir',
-                'gol_darah_id',
-                'ijazah_id',
-                'pekerjaan_id',
-                'pendapatan_id',
-                'tempat_babtis_id',
-                'tgl_babtis',
-                'tempat_sidi_id',
-                'tgl_sidi',
-                'hobi_id',
-                'aktifitas_pelayanan',
-                'memiliki_bpjs_asuransi',
-                'penyakit_id',
-                'domisili_alamat',
-                'nomor_wa',
-                'is_wafat',
-                'tgl_wafat',
-                'status_anggota_id',
+        'keluarga_id',
+        'user_id',
+        'name',
+        'jns_kelamin',
+        'nomor_induk_gereja',
+        'hubungan_keluarga_id',
+        'perkawinan_id',
+        'tgl_lahir',
+        'gol_darah_id',
+        'ijazah_id',
+        'pekerjaan_id',
+        'pendapatan_id',
+        'tempat_babtis_id',
+        'tgl_babtis',
+        'tempat_sidi_id',
+        'tgl_sidi',
+        'hobi_id',
+        'aktifitas_pelayanan',
+        'memiliki_bpjs_asuransi',
+        'penyakit_id',
+        'domisili_alamat',
+        'nomor_wa',
+        'is_wafat',
+        'tgl_wafat',
     ];
-    
+
     protected $with = [
         'keluarga',
         'user',
@@ -55,7 +56,8 @@ class KeluargaAnggota extends Model
         'penyakit',
         'recordPenyakit',
         'recordHobi',
-        'status',
+        'latestStatusRecord'
+        // 'status',
     ];
 
     public function keluarga(): BelongsTo
@@ -114,9 +116,13 @@ class KeluargaAnggota extends Model
     {
         return $this->belongsToMany(Hobi::class, 'keluarga_anggota_hobis', 'keluarga_anggota_id', 'hobi_id');
     }
-    public function status(): BelongsTo
+    public function statusRecords(): HasMany
     {
-        // return $this->belongsTo(StatusAnggota::class);
-        return $this->belongsTo(StatusAnggota::class, 'status_anggota_id');
+        return $this->hasMany(KeluargaAnggotaStatusRecord::class);
+    }
+
+    public function latestStatusRecord(): HasOne
+    {
+        return $this->hasOne(KeluargaAnggotaStatusRecord::class, 'keluarga_anggota_id')->latestOfMany('tanggal_status');
     }
 }

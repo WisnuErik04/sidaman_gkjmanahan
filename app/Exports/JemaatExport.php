@@ -162,7 +162,7 @@ class JemaatExport implements FromCollection, WithHeadings, WithColumnWidths
                 'Apakah mempunyai penyakit kronis' => $item->recordPenyakit->pluck('name')->implode(', ') ?? '-',
                 'Domisili di alamat ini' => ($item->domisili_alamat == '1') ? 'Ya' : 'Tidak',
                 'Nomor WA' => $item->nomor_wa,
-                'Status' => $item->status?->name ?? '-',
+                'Status' => $item->latestStatusRecord?->statusAnggota?->name ?? '-',
             ];
         });
     }

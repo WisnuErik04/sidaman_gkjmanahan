@@ -52,6 +52,7 @@ class KeluargaAnggotaDummy extends Model
         'keluarga_anggota_id',
         'user_id_input',
         'status_anggota_id',
+        'tanggal_status',
     ];
 
     protected $with = [

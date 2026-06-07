@@ -356,7 +356,7 @@
 
                                 <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                                     @forelse ($anggotas as $anggota)
-                                        <tr :key="{{ $anggota->id }}" class=" {{ $anggota->status_anggota_id == '6' ? 'bg-red-50 dark:bg-red-100' : '' }}">
+                                        <tr :key="{{ $anggota->id }}" class=" {{ $anggota->is_wafat == 1 ? 'bg-red-50 dark:bg-red-100' : '' }}">
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
@@ -541,7 +541,7 @@
 
                                 <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                                     @forelse ($anggotas as $anggota)
-                                        <tr :key="{{ $anggota->id }}" class=" {{ $anggota->status_anggota_id == '6' ? 'bg-red-50 dark:bg-red-100' : '' }}">
+                                        <tr :key="{{ $anggota->id }}" class=" {{ $anggota->is_wafat == 1 ? 'bg-red-50 dark:bg-red-100' : '' }}">
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
@@ -625,11 +625,17 @@
                                                 <div class="px-6 py-2">
                                                     <span
                                                         class="font-semibold text-sm text-gray-800 dark:text-neutral-200">
-                                                        {{ $anggota->status->name ?? '-' }}
+                                                        {{ $anggota->latestStatusRecord?->statusAnggota?->name ?? '-' }}
+                                                        {{ $anggota->latestStatusRecord?->tanggal_status ? '('.\Carbon\Carbon::parse($anggota->latestStatusRecord?->tanggal_status)->format('d-m-Y') .')': '-' }}
+
+                                                        {{-- @if (($anggota->latestStatusRecord?->statusAnggota?->name ?? '') === 'Meninggal')
+                                                            {{ $anggota->latestStatusRecord?->tanggal_status ? '('.\Carbon\Carbon::parse($anggota->latestStatusRecord?->tanggal_status)->format('d-m-Y') .')': '-' }}
+                                                        @endif --}}
+                                                        {{-- {{ $anggota->status->name ?? '-' }}
 
                                                         @if (($anggota->status->name ?? '') === 'Meninggal')
                                                             {{ $anggota->tgl_wafat ? '('.\Carbon\Carbon::parse($anggota->tgl_wafat)->format('d-m-Y') .')': '-' }}
-                                                        @endif
+                                                        @endif --}}
                                                     </span>
                                                 </div>
                                             </td>

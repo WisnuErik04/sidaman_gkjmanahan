@@ -10,8 +10,8 @@ class StatusAnggota extends Model
 {
     protected $fillable = ['name'];
 
-    public function keluargaAnggota(): HasMany
+    public function statusRecords(): HasMany
     {
-        return $this->hasMany(KeluargaAnggota::class, 'status_anggota_id');
+        return $this->hasMany(KeluargaAnggotaStatusRecord::class);
     }
 }

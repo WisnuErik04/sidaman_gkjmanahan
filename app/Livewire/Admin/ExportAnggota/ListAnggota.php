@@ -56,8 +56,10 @@ class ListAnggota extends Component
     public $searchTgl_sidi_akhir = '';
     public $searchBlok = '';
     public $searchGenerasi = '';
+    public $searchRiwayatStatus = '';
     public $searchStatus = '';
     public $searchKelompokUsia = '';
+    public $searchJenisStatus = '';
 
     public $hubunganKeluargas;
     public $perkawinans;
@@ -73,7 +75,9 @@ class ListAnggota extends Component
     public $generasis;
     public $statuses;
     public $kelompokUsias;
-
+    public $search_riwayat_status_awal;
+    public $search_riwayat_status_akhir;
+    
     public $perPage = 10;
     public $sortDirection1 = 'asc';    // Default arah sorting
     public $sortField1 = 'name'; // Default kolom sorting
@@ -93,6 +97,7 @@ class ListAnggota extends Component
         $this->penyakits = Penyakit::all();
         $this->statuses = StatusAnggota::all();
         $this->searchStatus = ['1', '3', '4'];
+        $this->searchRiwayatStatus ;
         // $this->generasis = [
         //     0 => [
         //         'id' => 1,
@@ -131,6 +136,7 @@ class ListAnggota extends Component
         //         'tahun_akhir' => date('Y'),
         //     ]
         // ];
+        $this->searchJenisStatus = '1';
 
         $this->generasis = collect([
             (object)[
@@ -214,8 +220,35 @@ class ListAnggota extends Component
     public function render()
     {
         $anggotas = $this->loadanggotas();
+        if ($this->searchJenisStatus == '2') {
+            // jika filter jenis status == 2 (riwayat status), maka load record status tersbut dengan tanggal statusnya untuk tiap anggota, lalu cari record yang sesuai dengan filter riwayat status, dan attach ke masing-masing anggota sebagai properti baru "historicalStatusRecord"
+            $anggotas->load(['statusRecords.statusAnggota'])->each(function ($anggota) {
+                $statusRecord = $anggota->statusRecords->where('status_anggota_id', $this->searchRiwayatStatus)->first();
+                $anggota->historicalStatusRecord = $statusRecord ? [
+                    'tanggal_status' => $statusRecord->tanggal_status,
+                    'status_nama' => $statusRecord->statusAnggota->name ?? $statusRecord->statusAnggota->nama
+                ] : null;                
+            });
+            
+        }
+        // dd($anggotas->toArray());
         return view('livewire.admin.export-anggota.list-anggota', compact('anggotas'));
     }
+
+//     public function updatedSearchJenisStatus($value)
+// {
+//     $this->searchJenisStatus = $value;
+//     if ($value == '1') {
+//         // Jika pilih Status Aktif, bersihkan isian Riwayat & Tanggal
+//         $this->reset(['searchRiwayatStatus', 'search_riwayat_status_awal', 'search_riwayat_status_akhir']);
+//     } elseif ($value == '2') {
+//         // Jika pilih Riwayat Status, bersihkan isian Status Aktif
+//         $this->reset(['searchStatus']);
+//     } else {
+//         // Jika dikosongkan kembali, reset seluruh filter status
+//         $this->reset(['searchStatus', 'searchRiwayatStatus', 'search_riwayat_status_awal', 'search_riwayat_status_akhir']);
+//     }
+// }
 
     public function loadAnggotas()
     {
@@ -285,8 +318,29 @@ class ListAnggota extends Component
             });
         }
 
-        if ($this->searchStatus) {
-            $query->whereIn('status_anggota_id', $this->searchStatus);
+        // Apply only one kind of status filter depending on selected jenis status
+        if ($this->searchJenisStatus == '2' && $this->searchRiwayatStatus && $this->searchRiwayatStatus != '--') {
+            $statusIds = (array) $this->searchRiwayatStatus;
+            $query->whereHas('statusRecords', function ($statusQuery) use ($statusIds) {
+                $statusQuery->whereIn('status_anggota_id', $statusIds);
+                    if ($this->search_riwayat_status_awal || $this->search_riwayat_status_akhir) {
+                        if (!$this->search_riwayat_status_awal) $this->search_riwayat_status_awal = '1900-01-01';
+                        if (!$this->search_riwayat_status_akhir) $this->search_riwayat_status_akhir = now()->toDateString();
+
+                        $statusQuery->whereBetween('tanggal_status', [$this->search_riwayat_status_awal, $this->search_riwayat_status_akhir]);
+                    }
+            });
+        }
+
+        if ($this->searchJenisStatus == '1' && $this->searchStatus) {
+            $statusIds = (array) $this->searchStatus;
+            $query->whereHas('statusRecords', function ($statusQuery) use ($statusIds) {
+                $statusQuery->whereIn('status_anggota_id', $statusIds)->where('tanggal_status', function ($subQuery) {
+                    $subQuery->selectRaw('MAX(tanggal_status)')
+                        ->from('keluarga_anggota_status_records')
+                        ->whereColumn('keluarga_anggota_id', 'keluarga_anggotas.id');
+                });
+            });
         }
 
         if ($this->searchBlok) {

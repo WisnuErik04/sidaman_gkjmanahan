@@ -154,6 +154,7 @@ class ListKeluarga extends Component
 
     public function exportKeluarga(): BinaryFileResponse
     {
+        // dd(new JemaatExport($this));
         return Excel::download(
             new JemaatExport($this),
             'data-keluarga.xlsx'

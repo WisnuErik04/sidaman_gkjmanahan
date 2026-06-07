@@ -21,6 +21,7 @@ use App\Livewire\Warga\Anggotas\Anggota;
 use App\Livewire\Admin\Ijazahs\AddIjazah;
 use App\Livewire\Teacher\Grades\AddGrade;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\StatusMigrationController;
 use App\Livewire\Admin\Ijazahs\EditIjazah;
 use App\Livewire\Admin\Ijazahs\ListIjazah;
 use App\Livewire\Teacher\Grades\EditGrade;
@@ -123,6 +124,7 @@ Route::middleware(['majelis', 'auth'])->group(function () {
     Route::get('/export_anggota', ListAnggota::class)->name('export_anggota.index');
 
     Route::get('/export_keluarga_anggota/{id}', [ExportController::class, 'exportPDF'])->name('export_keluarga_anggota_pdf.index');
+    Route::get('/admin/migrate-status-records', [StatusMigrationController::class, 'migrate'])->name('admin.migrate.status_records');
     // =============== EXPORT ===============
 });
 
@@ -153,6 +155,7 @@ Route::middleware(['admin', 'auth'])->group(function () {
     Route::get('/export_anggota', ListAnggota::class)->name('export_anggota.index');
 
     Route::get('/export_keluarga_anggota/{id}', [ExportController::class, 'exportPDF'])->name('export_keluarga_anggota_pdf.index');
+    Route::get('/admin/migrate-status-records', [StatusMigrationController::class, 'migrate'])->name('admin.migrate.status_records');
     // =============== EXPORT ===============
 
     // =============== MASTER DATA ===============

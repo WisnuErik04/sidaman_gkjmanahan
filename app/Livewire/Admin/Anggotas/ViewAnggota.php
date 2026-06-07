@@ -48,7 +48,7 @@ class ViewAnggota extends Component
             return redirect()->route('anggota.index');
         };
         $this->anggotas = KeluargaAnggota::with([
-            'status',
+            // 'status',
             'hubunganKeluarga',
             'perkawinan',
             'golDarah',

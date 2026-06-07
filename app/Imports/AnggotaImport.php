@@ -79,7 +79,7 @@ class AnggotaImport implements ToCollection, WithHeadingRow
             $existingKeluarga = Keluarga::where('name', 'like', '%' . $data['kepala_keluarga'] . '%')
                 ->where('blok_id', $blok?->id)
                 ->first();
-
+            
             if (
                 ! $existingKeluarga ||
                 ! in_array($data['jns_kelamin'], ['L', 'P']) ||
@@ -96,7 +96,8 @@ class AnggotaImport implements ToCollection, WithHeadingRow
                 // ! $hobis ||
                 // ! $penyakits ||
                 ! $validHobi || ! $validPenyakit ||
-                ! $statuses
+                ! $statuses ||
+                ! $data['tanggal_status']
             ) {
                 $this->errors[] = [
                     'baris' => $rowNumber,
@@ -118,6 +119,7 @@ class AnggotaImport implements ToCollection, WithHeadingRow
                     'Talenta/ Hobi' => $validHobi ? 'OK' : 'Ada kode tidak ditemukan',
                     'Apakah mempunyai penyakit kronis' => $validPenyakit ? 'OK' : 'Ada kode tidak ditemukan',
                     'status' => $statuses ? 'OK' : 'Tidak ditemukan',
+                    'tanggal_status' => $data['tanggal_status'] ? 'OK' : 'Harus diisi',
                 ];
                 $rowNumber++;
                 continue;
@@ -130,7 +132,7 @@ class AnggotaImport implements ToCollection, WithHeadingRow
             $data['tgl_lahir'] = $this->parseDate($data['tgl_lahir'] ?? null);
             $data['tgl_babtis'] = $this->parseDate($data['tgl_babtis'] ?? null);
             $data['tgl_sidi'] = $this->parseDate($data['tgl_sidi'] ?? null);
-            $data['tgl_wafat'] = $this->parseDate($data['tgl_wafat'] ?? null);
+            $data['tanggal_status'] = $this->parseDate($data['tanggal_status'] ?? null);
             // dd($data['penyakit_id'], $penyakitIds, $penyakits    , $penyakit_ids);
             // $query = KeluargaAnggota::where('name', 'like', '%' . $data['name'] . '%')
             //     ->where('keluarga_id', $existingKeluarga?->id);
@@ -164,7 +166,7 @@ class AnggotaImport implements ToCollection, WithHeadingRow
                 // Tambahkan kolom lainnya
                 'keluarga_anggota_id' => $existingKeluargaAnggota?->id,
                 'user_id_input' => auth()->user()->id,
-                'tgl_wafat' => $data['tgl_wafat'],
+                'tanggal_status' => $data['tanggal_status'],
             ]);
             
         }
@@ -196,7 +198,7 @@ class AnggotaImport implements ToCollection, WithHeadingRow
         "domisili_di_alamat_ini_yn" => "domisili_alamat",
         "nomor_wa" => "nomor_wa",
         "status_kode" => "status_anggota_id",
-        "tanggal_wafat" => "tgl_wafat",
+        "tanggal_status" => "tanggal_status",
     ];
 
     public function parseDate($value)

@@ -40,7 +40,7 @@ class KeluargaAnggotaTemplateExportSheet implements FromCollection, WithTitle, W
             'Y',                        // Domisili di alamat ini (kode)
             '081234567890',            // Nomor WA
             '3',                        // Status
-            '',                         // Tanggal wafat
+            '21-12-1998',               // Tanggal status
         ],
         [
             'Yohanes Adi',
@@ -66,7 +66,7 @@ class KeluargaAnggotaTemplateExportSheet implements FromCollection, WithTitle, W
             'Y',
             '081298765432',
             '1',
-            '',
+            '01-12-2002',
         ],
         [
             'Maria Indah',
@@ -123,7 +123,7 @@ class KeluargaAnggotaTemplateExportSheet implements FromCollection, WithTitle, W
             'Domisili di alamat ini (Y/N)',
             'Nomor WA',
             'Status (kode)',
-            'Tanggal wafat',
+            'Tanggal status',
         ];
     }
 

@@ -198,9 +198,12 @@
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span class="text-sm text-gray-800 dark:text-neutral-200">
-                                                        {{ $anggota->status->name ?? '-' }}
+                                                        {{-- {{ $anggota->status->name ?? '-' }} --}}
+                                                        {{ $anggota->latestStatusRecord?->statusAnggota?->name ?? '-' }}
+                                                        
+                                                        {{ $anggota->historicalStatusRecord ? '(' . $anggota->historicalStatusRecord['status_nama'] . ': '. \Carbon\Carbon::parse($anggota->historicalStatusRecord['tanggal_status'])->translatedFormat('d F Y') . ')' : '' }}
                                                         @php
-                //                                             $tanggalLahir = \Carbon\Carbon::parse($anggota->tgl_lahir);
+                //                                          $tanggalLahir = \Carbon\Carbon::parse($anggota->tgl_lahir);
                 // $usia = $tanggalLahir->diffInYears(\Carbon\Carbon::now()); 
                                                             
                                                         @endphp

@@ -182,7 +182,7 @@
                            
                                     @forelse ($anggotas as $anggota)
                                         <tr :key="{{ $anggota->id }}"
-                                            class=" {{ $anggota->status_anggota_id == '6' ? 'bg-red-50 dark:bg-red-100' : '' }}">
+                                            class=" {{ $anggota->is_wafat == 1 ? 'bg-red-50 dark:bg-red-100' : '' }}">
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span
@@ -215,7 +215,9 @@
                                             <td class="h-px w-auto whitespace-nowrap">
                                                 <div class="px-6 py-2">
                                                     <span class="text-sm text-gray-800 dark:text-neutral-200">
-                                                        {{ $anggota->status->name ?? '-' }} </span>
+                                                        {{ $anggota->latestStatusRecord?->statusAnggota?->name ?? '-' }}
+                                                        {{-- {{ $anggota->statusRecord->latestStatus->name ?? '-' }} --}}
+                                                     </span>
                                                 </div>
                                             </td>
                                             <td class="h-px w-52">

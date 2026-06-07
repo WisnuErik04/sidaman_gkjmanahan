@@ -294,7 +294,7 @@
         <div>
             <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Tempat
                 baptis dewasa/ Sidi
-               </label>
+            </label>
 
             <select wire:model="tempat_sidi_id"
                 data-hs-select='{        
@@ -325,7 +325,7 @@
 
         <div>
             <label for="hs-feedback-post-comment-name-1"
-                class="block mb-2 text-sm font-medium dark:text-white">Tanggal baptis dewasa/ Sidi 
+                class="block mb-2 text-sm font-medium dark:text-white">Tanggal baptis dewasa/ Sidi
             </label>
             <input type="date"
                 class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
@@ -340,8 +340,7 @@
                 class="block mb-2 text-sm font-medium dark:text-white">Talenta/ Hobi
             </label>
 
-            <select wire:model="hobi_id" multiple="" 
-                {{-- data-hs-select='{        
+            <select wire:model="hobi_id" multiple="" {{-- data-hs-select='{        
                             "hasSearch": true,
                             "searchLimit": 5,
                             "searchPlaceholder": "Search...",
@@ -355,7 +354,7 @@
                             "optionTemplate": "<div><div class=\"flex items-center\"><div class=\"me-2\" data-icon></div><div class=\"text-gray-800 dark:text-neutral-200 \" data-title></div></div></div>",
                             "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-500 \" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
                         }' --}}
-                        data-hs-select='{        
+                data-hs-select='{        
                             "hasSearch": true,
                             "searchLimit": 5,
                             "isSearchDirectMatch": false,
@@ -383,7 +382,7 @@
 
         <div>
             <label for="hs-feedback-post-comment-name-1"
-                class="block mb-2 text-sm font-medium dark:text-white">Aktivitas pelayanan yg aktif diikuti 
+                class="block mb-2 text-sm font-medium dark:text-white">Aktivitas pelayanan yg aktif diikuti
             </label>
             <input type="text"
                 class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
@@ -395,7 +394,7 @@
 
         <div>
             <label for="hs-feedback-post-comment-name-1"
-                class="block mb-2 text-sm font-medium dark:text-white">Memiliki bpjs atau asuransi lainnya 
+                class="block mb-2 text-sm font-medium dark:text-white">Memiliki bpjs atau asuransi lainnya
                 <span class="text-red-500">*</span></label>
             <div class="grid sm:grid-cols-2 gap-2">
                 <label for="hs-radio-bpjs-y"
@@ -425,7 +424,7 @@
                 mempunyai penyakit kronis
                 <span class="text-red-500">*</span></label>
 
-            <select wire:model="penyakit_id" multiple="" 
+            <select wire:model="penyakit_id" multiple=""
                 data-hs-select='{        
                             "hasSearch": true,
                             "searchLimit": 5,
@@ -478,7 +477,7 @@
                 <span class="text-red-500">{{ $message }}</span>
             @enderror
         </div>
- 
+
         <div>
             <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Nomor
                 WA</label>
@@ -495,8 +494,7 @@
                 class="block mb-2 text-sm font-medium dark:text-white">Keluarga
                 <span class="text-red-500">*</span></label>
 
-            <select wire:model="keluarga_id"
-                {{-- data-hs-select='{        
+            <select wire:model="keluarga_id" {{-- data-hs-select='{        
                             "hasSearch": true,
                             "searchLimit": 5,
                             "searchPlaceholder": "Search...",
@@ -537,19 +535,31 @@
         </div>
     </div>
 
+
+
     <!-- Header -->
     <div
         class="mb-2 pb-2 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
-        <div>
-            <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
-                Data Tambahan
-            </h2>
-        </div>
+        {{-- <div> --}}
+            <div class="">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
+                    Riwayat Status Anggota
+                </h2>
+            </div>
+            <div>
+                <button type="button" wire:click="addRiwayat"
+                    class="hover:cursor-pointer bg-blue-600 shadow hover:bg-blue-700 text-white relative items-center font-medium justify-center gap-2 whitespace-nowrap disabled:opacity-75 dark:disabled:opacity-75 disabled:cursor-default disabled:pointer-events-none h-8 text-sm rounded-md px-3 inline-flex  bg-[var(--color-accent)] hover:bg-[color-mix(in_oklab,_var(--color-accent),_transparent_10%)] text-[var(--color-accent-foreground)] border border-black/10 dark:border-0 shadow-[inset_0px_1px_--theme(--color-white/.2)] [[data-flux-button-group]_&]:border-e-0 [:is([data-flux-button-group]>&:last-child,_[data-flux-button-group]_:last-child>&)]:border-e-[1px] dark:[:is([data-flux-button-group]>&:last-child,_[data-flux-button-group]_:last-child>&)]:border-e-0 dark:[:is([data-flux-button-group]>&:last-child,_[data-flux-button-group]_:last-child>&)]:border-s-[1px] [:is([data-flux-button-group]>&:not(:first-child),_[data-flux-button-group]_:not(:first-child)>&)]:border-s-[color-mix(in_srgb,var(--color-accent-foreground),transparent_85%)]">
+                    + Tambah Status
+                </button>
+            </div>
+
+
+        {{-- </div> --}}
     </div>
     <!-- End Header -->
-    <div class="mb-4 sm:mb-8 grid grid-cols-1 sm:grid-cols-4 gap-4 lg:gap-6">
+    {{-- <div class="mb-4 sm:mb-8 grid grid-cols-1 sm:grid-cols-4 gap-4 lg:gap-6"> --}}
 
-        {{-- <div>
+    {{-- <div>
             <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Telah
                 Wafat </label>
             <div class="grid sm:grid-cols-2 gap-2">
@@ -574,13 +584,18 @@
             @enderror
         </div> --}}
 
-        <div>
-            <label for="hs-feedback-post-comment-name-1"
-                class="block mb-2 text-sm font-medium dark:text-white">Status
-             <span class="text-red-500">*</span></label>
+    {{-- <div class="space-y-3"> --}}
+    @foreach ($riwayatInputStatus as $index => $riwayat)
+        
+        <div wire:key="riwayat-field-{{ $index }}"
+            class="mb-4 sm:mb-8 grid grid-cols-1 sm:grid-cols-4 gap-4 lg:gap-6">
 
-            <select wire:model="status_anggota_id"
-                data-hs-select='{        
+
+            <div>
+                <input type="hidden" wire:model="riwayatInputStatus.{{ $index }}.id">
+                <label class="block mb-2 text-sm font-medium dark:text-white">Status</label>
+                <select wire:model="riwayatInputStatus.{{ $index }}.status"
+                    data-hs-select='{        
                             "hasSearch": true,
                             "searchLimit": 5,
                             "searchPlaceholder": "Search...",
@@ -594,29 +609,48 @@
                             "optionTemplate": "<div><div class=\"flex items-center\"><div class=\"me-2\" data-icon></div><div class=\"text-gray-800 dark:text-neutral-200 \" data-title></div></div></div>",
                             "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-500 \" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
                         }'
-                class="">
-                <option value=""></option>
-                @foreach ($statuses as $status)
-                    <option value="{{ $status->id }}">{{ $status->name }}</option>
-                @endforeach
-            </select>
-            @error('status_anggota_id')
-                <span class="text-red-500">{{ $message }}</span>
-            @enderror
-        </div>
+                    class="">
+                    <option value=""></option>
+                    @foreach ($statuses as $status)
+                        <option value="{{ $status->id }}">{{ $status->name }}</option>
+                    @endforeach
+                </select>
+                @error("riwayatInputStatus.$index.status")
+                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <div>
-            <label for="hs-feedback-post-comment-name-1"
-                class="block mb-2 text-sm font-medium dark:text-white">Tanggal wafat</label>
-            <input type="date"
-                class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                placeholder="Tanggal wafat" wire:model="tgl_wafat">
-            @error('tgl_wafat')
-                <span class="text-red-500">{{ $message }}</span>
-            @enderror
-        </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium dark:text-white">Tanggal Status</label>
+                <input type="date" wire:model="riwayatInputStatus.{{ $index }}.tanggal"
+                    class="py-2.5 sm:py-3 px-4 block w-full border border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                @error(" riwayatInputStatus.$index.tanggal")
+                    <span class="text-red-500 text-xs">
+                        {{ $message }}</span>
+                @enderror
+            </div>
 
-    </div>
+            @if (count($riwayatInputStatus) > 1)
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-transparent">&nbsp;</label>
+                    <button type="button" wire:click="removeRiwayat({{ $index }})" wire:loading.class="opacity-50" wire:loading.attr="disabled"
+                        class="hover:cursor-pointer bg-red-600 shadow hover:bg-red-700 text-white relative items-center font-medium justify-center gap-2 whitespace-nowrap disabled:opacity-75 dark:disabled:opacity-75 disabled:cursor-default disabled:pointer-events-none h-8 text-sm rounded-md px-3 inline-flex  bg-[var(--color-accent)] hover:bg-[color-mix(in_oklab,_var(--color-accent),_transparent_10%)] text-[var(--color-accent-foreground)] border border-black/10 dark:border-0 shadow-[inset_0px_1px_--theme(--color-white/.2)] [[data-flux-button-group]_&]:border-e-0 [:is([data-flux-button-group]>&:last-child,_[data-flux-button-group]_:last-child>&)]:border-e-[1px] dark:[:is([data-flux-button-group]>&:last-child,_[data-flux-button-group]_:last-child>&)]:border-e-0 dark:[:is([data-flux-button-group]>&:last-child,_[data-flux-button-group]_:last-child>&)]:border-s-[1px] [:is([data-flux-button-group]>&:not(:first-child),_[data-flux-button-group]_:not(:first-child)>&)]:border-s-[color-mix(in_srgb,var(--color-accent-foreground),transparent_85%)]">
+                        Hapus
+                    </button>
+                </div>
+            @endif
+{{-- 
+            <div class="pt-5">
+                @if (count($riwayatInputStatus) > 1)
+                    <button type="button" wire:click="removeRiwayat({{ $index }})"
+                        class="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
+                        Hapus
+                    </button>
+                @endif
+            </div> --}}
+        </div>
+    @endforeach
+    
 
     <div class="flex">
         <flux:spacer />
