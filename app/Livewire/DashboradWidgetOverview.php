@@ -34,9 +34,12 @@ class DashboradWidgetOverview extends Component
         // Fetch Data
         $this->totalKeluargas = Keluarga::whereNull('deleted_at')->count();
 
-        $this->totalKeluargaAnggotas = KeluargaAnggota::whereNull('deleted_at')
+        $this->totalKeluargaAnggotas = KeluargaAnggota::with('latestStatusRecord')
+            ->whereNull('deleted_at')
             // ->where('is_wafat', '0')
-            ->whereIn('status_anggota_id', ['1', '3', '4'])
+            ->whereHas('latestStatusRecord', function ($q) {
+                $q->whereIn('status_anggota_id', ['1', '3', '4']);
+            })
             ->count();
 
         // Total keluarga
@@ -53,7 +56,9 @@ class DashboradWidgetOverview extends Component
         // Total anggota keluarga (yang belum wafat)
         $totalAnggotaQuery = KeluargaAnggota::whereNull('deleted_at')
             // ->where('is_wafat', '0')
-            ->whereIn('status_anggota_id', ['1', '3', '4']);
+            ->whereHas('latestStatusRecord', function ($q) {
+                $q->whereIn('status_anggota_id', ['1', '3', '4']);
+            });
         if (auth()->user()->role === 'majelis') {
             $totalAnggotaQuery->whereHas('keluarga', function ($q) {
                 $q->where('blok_id', auth()->user()->blok_id);
@@ -75,7 +80,9 @@ class DashboradWidgetOverview extends Component
 
         $query = KeluargaAnggota::selectRaw('jns_kelamin, COUNT(*) as total')
             ->whereNull('deleted_at')
-            ->whereIn('status_anggota_id', ['1', '3', '4'])
+            ->whereHas('latestStatusRecord', function ($q) {
+                $q->whereIn('status_anggota_id', ['1', '3', '4']);
+            })
             // ->where('is_wafat', '0')
             ;
         // Filter khusus jika user adalah majelis
@@ -115,7 +122,9 @@ class DashboradWidgetOverview extends Component
         $query = KeluargaAnggota::select("tgl_lahir")
             ->whereNotNull("tgl_lahir")
             ->whereNull('deleted_at')
-            ->whereIn('status_anggota_id', ['1', '3', '4']); // status
+            ->whereHas('latestStatusRecord', function ($q) {
+                $q->whereIn('status_anggota_id', ['1', '3', '4']);
+            }); // status
 
         // Filter jika user adalah majelis
         if (auth()->user()->role === 'majelis') {
